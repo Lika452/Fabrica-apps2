@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fábrica de Apps Libre</title>
+<style>
+    body { font-family: Arial, sans-serif; background: #0f172a; color: white; text-align: center; padding: 20px; }
+    h1 { color: #38bdf8; }
+    #mic { width: 100px; height: 100px; border-radius: 50%; background: #22c55e; border: none; font-size: 40px; cursor: pointer; margin: 20px; }
+    #mic.recording { background: #ef4444; }
+    #respuesta { margin-top: 20px; padding: 15px; background: #1e293b; border-radius: 10px; min-height: 50px; }
+    button { padding: 10px 20px; background: #38bdf8; color: #0f172a; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<h1>🏭 Fábrica de Apps por Voz</h1>
+<p>Toca el micrófono y di: "haceme una calculadora"</p>
+
+<button id="mic">🎤</button>
+
+<div id="respuesta">Esperando tu orden...</div>
+
+<script>
+const mic = document.getElementById('mic');
+const respuesta = document.getElementById('respuesta');
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
+recognition.lang = 'es-AR';
+mic.onclick = () => {
+    recognition.start();
+    mic.classList.add('recording');
+    respuesta.innerText = "Escuchando...";
+};
+recognition.onresult = (e) => {
+    const texto = e.results[0][0].transcript;
+    mic.classList.remove('recording');
+    respuesta.innerHTML = `Entendí: <b>${texto}</b><br><br>✅ Tu app está lista`;
+};
+</script>
+</body>
+</html>
