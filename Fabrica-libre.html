@@ -4,41 +4,141 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fábrica de Apps Libre</title>
+<title>Fábrica de Apps por Voz</title>
 <style>
-    body { font-family: Arial, sans-serif; background: #0f172a; color: white; text-align: center; padding: 20px; }
-    h1 { color: #38bdf8; }
-    #mic { width: 100px; height: 100px; border-radius: 50%; background: #22c55e; border: none; font-size: 40px; cursor: pointer; margin: 20px; }
-    #mic.recording { background: #ef4444; }
-    #respuesta { margin-top: 20px; padding: 15px; background: #1e293b; border-radius: 10px; min-height: 50px; }
-    button { padding: 10px 20px; background: #38bdf8; color: #0f172a; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+body{background:#0f172a;color:#fff;font-family:sans-serif;padding:20px}
+h1{color:#38bdf8;text-align:center}
+.input-box{display:flex;gap:10px;margin:20px 0}
+#texto{flex:1;padding:12px;border-radius:8px;border:none;background:#1e293b;color:#fff}
+#mic{width:50px;height:50px;border-radius:50%;background:#22c55e;border:none;font-size:24px;cursor:pointer}
+#crear{background:#38bdf8;color:#000;padding:12px 20px;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
+.app-box{background:#1e293b;padding:15px;border-radius:10px;margin:15px 0}
+.btn{padding
+     <!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fábrica de Apps por Voz</title>
+<style>
+body{background:#0f172a;color:#fff;font-family:sans-serif;padding:20px}
+h1{color:#38bdf8;text-align:center}
+.input-box{display:flex;gap:10px;margin:20px 0}
+#texto{flex:1;padding:12px;border-radius:8px;border:none;background:#1e293b;color:#fff}
+#mic{width:50px;height:50px;border-radius:50%;background:#22c55e;border:none;font-size:24px;cursor:pointer}
+#crear{background:#38bdf8;color:#000;padding:12px 20px;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
+.app-box{background:#1e293b;padding:15px;border-radius:10px;margin:15px 0}
+.btn{padding:8px 12px;border:none;border-radius:6px;font-weight:bold;margin:5px;cursor:pointer}
+.btn-abrir{background:#22c55e;color:#000}
+.btn-borrar{background:#ef4444;color:#fff}
+.app-contenido{display:none;margin-top:15px;border-top:1px solid #444;padding-top:15px}
+.producto{background:#334155;padding:10px;border-radius:8px;margin:8px 0}
+.promo{border:2px solid #f59e0b;background:#422006}
+input,textarea{padding:8px;margin:5px;border-radius:5px;border:none;width:90%}
+.badge{background:#f59e0b;color:#000;padding:3px 8px;border-radius:5px;font-size:12px}
 </style>
 </head>
 <body>
-
 <h1>🏭 Fábrica de Apps por Voz</h1>
-<p>Toca el micrófono y di: "haceme una calculadora"</p>
+<p style="text-align:center">Di: calculadora, lista, cronometro, conversor, tienda</p>
 
-<button id="mic">🎤</button>
+<div class="input-box">
+  <input id="texto" placeholder="Escribe o habla tu idea...">
+  <button id="mic">🎤</button>
+  <button id="crear" onclick="crearAppDesdeTexto()">Crear</button>
+</div>
 
-<div id="respuesta">Esperando tu orden...</div>
+<div id="lista-apps"><h2>Mis Apps</h2></div>
 
 <script>
-const mic = document.getElementById('mic');
-const respuesta = document.getElementById('respuesta');
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 recognition.lang = 'es-AR';
-mic.onclick = () => {
-    recognition.start();
-    mic.classList.add('recording');
-    respuesta.innerText = "Escuchando...";
-};
-recognition.onresult = (e) => {
-    const texto = e.results[0][0].transcript;
-    mic.classList.remove('recording');
-    respuesta.innerHTML = `Entendí: <b>${texto}</b><br><br>✅ Tu app está lista`;
-};
+mic.onclick = () => { recognition.start(); mic.style.background='#ef4444'; }
+recognition.onend = () => { mic.style.background='#22c55e'; }
+recognition.onresult = (e) => { texto.value = e.results[0][0].transcript; crearAppDesdeTexto(); }
+
+cargarApps();
+
+function crearAppDesdeTexto(){
+  const pedido = texto.value.toLowerCase();
+  if(!pedido) return;
+  texto.value = '';
+  let id = Date.now();
+  let codigo = '';
+  let nombre = 'App';
+
+  if(pedido.includes('tienda') || pedido.includes('mercado')){
+    nombre = "🛒 Tienda Local";
+    codigo = `
+    <input id="busc${id}" placeholder="🔍 Buscar producto..." onkeyup="buscar${id}()">
+    <h3>➕ Publicar Producto</h3>
+    <input id="nom${id}" placeholder="Nombre del producto"><br>
+    <input id="pre${id}" type="number" placeholder="Precio $"><br>
+    <textarea id="desc${id}" placeholder="Descripción"></textarea><br>
+    <label><input type="checkbox" id="promo${id}"> 🔥 Marcar como Promoción</label><br>
+    <button onclick="guardarProd${id}()">Publicar</button>
+    <h3>🔥 Promociones</h3>
+    <div id="promos${id}"></div>
+    <h3>📦 Todos los Productos</h3>
+    <div id="lista${id}"></div>
+    <script>
+    function guardarProd${id}(){
+      if(!nom${id}.value ||!pre${id}.value) return alert('Completa nombre y precio');
+      let prods = JSON.parse(localStorage.getItem('tienda${id}') || '[]');
+      prods.push({n:nom${id}.value, p:pre${id}.value, d:desc${id}.value, promo:promo${id}.checked});
+      localStorage.setItem('tienda${id}', JSON.stringify(prods));
+      mostrarProd${id}();
+      nom${id}.value=''; pre${id}.value=''; desc${id}.value=''; promo${id}.checked=false;
+    }
+    function mostrarProd${id}(){
+      let prods = JSON.parse(localStorage.getItem('tienda${id}') || '[]');
+      let promos = prods.filter(p=>p.promo);
+      let normales = prods.filter(p=>!p.promo);
+      promos${id}.innerHTML = promos.map(p=>'<div class="producto promo"><span class=badge>OFERTA</span><br><b>'+p.n+'</b><br>$'+p.p+'<br><small>'+p.d+'</small></div>').join('') || '<p>No hay promos</p>';
+      lista${id}.innerHTML = normales.map(p=>'<div class=producto><b>'+p.n+'</b><br>$'+p.p+'<br><small>'+p.d+'</small></div>').join('') || '<p>No hay productos</p>';
+    }
+    function buscar${id}(){
+      let txt = busc${id}.value.toLowerCase();
+      let prods = JSON.parse(localStorage.getItem('tienda${id}') || '[]');
+      let filtrados = prods.filter(p=>p.n.toLowerCase().includes(txt));
+    
+      lista${id}.innerHTML = filtrados.map(p=>'<div class=producto><b>'+p.n+'</b><br>$'+p.p
+          lista${id}.innerHTML = filtrados.map(p=>'<div class=producto><b>'+p.n+'</b><br>$'+p.p+'<br><small>'+p.d+'</small></div>').join('');
+    }
+    mostrarProd${id}();
+    </script>`;
+  }
+  else if(pedido.includes('calculadora')){
+    nombre = "🧮 Calculadora";
+    codigo = `<input id="a${id}" type="number"><input id="b${id}" type="number"><br>
+    <button onclick="alert(Number(a${id}.value)+Number(b${id}.value))">+</button>`;
+  }
+  else if(pedido.includes('lista')){
+    nombre = "📝 Lista";
+    codigo = `<input id="t${id}"><button onclick="l${id}.innerHTML+='<li>'+t${id}.value+'</li>';t${id}.value=''">Agregar</button><ul id="l${id}"></ul>`;
+  }
+
+  let apps = JSON.parse(localStorage.getItem('misApps') || '[]');
+  apps.push({id, nombre, pedido, codigo});
+  localStorage.setItem('misApps', JSON.stringify(apps));
+  cargarApps();
+}
+
+function cargarApps(){
+  let apps = JSON.parse(localStorage.getItem('misApps') || '[]');
+  let html = '<h2>Mis Apps</h2>';
+  if(apps.length === 0) html += '<p>Aún no creaste ninguna app</p>';
+  apps.forEach(app => {
+    html += `<div class="app-box"><b>${app.nombre}</b><br><small>Pedido: "${app.pedido}"</small><br>
+    <button class="btn btn-abrir" onclick="abrirApp(${app.id})">Abrir</button>
+    <button class="btn btn-borrar" onclick="borrarApp(${app.id})">Borrar</button>
+    <div class="app-contenido" id="app-${app.id}">${app.codigo}</div></div>`;
+  });
+  document.getElementById('lista-apps').innerHTML = html;
+}
+function abrirApp(id){ let div = document.getElementById('app-'+id); div.style.display = div.style.display === 'block'? 'none' : 'block'; }
+function borrarApp(id){ if(confirm('¿Borrar?')){ let apps = JSON.parse(localStorage.getItem('misApps') || '[]'); apps = apps.filter(app => app.id!== id); localStorage.setItem('misApps', JSON.stringify(apps)); cargarApps(); }}
 </script>
 </body>
 </html>
