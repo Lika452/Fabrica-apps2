@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fábrica de Apps por Voz</title>
+<title>Fabrica de Apps por Voz</title>
 <style>
-body{background:#0f172a;color:#fff;font-family:sans-serif;padding:20px}
-h1{color:#38bdf8;text-align:center}
-.input-box{display:flex;gap:10px;margin:20px 0}
-#texto{flex:1;padding:12px;border-radius:8px;border:none;background:#1e293b;color:#fff}
+body{background:#0f172a;color:#fff;font-family:sans-serif;padding:20px;text-align:center}
+h1{color:#38bdf8}
+.input-box{display:flex;gap:10px;justify-content:center;margin:20px 0}
+#texto{flex:1;max-width:300px;padding:12px;border-radius:8px;border:none;background:#1e293b;color:#fff}
 #mic{width:50px;height:50px;border-radius:50%;background:#22c55e;border:none;font-size:24px;cursor:pointer}
 #crear{background:#38bdf8;color:#000;padding:12px 20px;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
-.app-box{background:#1e293b;padding:15px;border-radius:10px;margin:15px 0}
+.app-box{background:#1e293b;padding:15px;border-radius:10px;margin:15px auto;max-width:600px;text-align:left}
 .btn{padding:8px 12px;border:none;border-radius:6px;font-weight:bold;margin:5px;cursor:pointer}
 .btn-abrir{background:#22c55e;color:#000}
 .btn-borrar{background:#ef4444;color:#fff}
@@ -23,8 +23,8 @@ input,textarea{padding:8px;margin:5px;border-radius:5px;border:none;width:90%}
 </style>
 </head>
 <body>
-<h1>🏭 Fábrica de Apps por Voz</h1>
-<p style="text-align:center">Di: calculadora, lista, cronometro, conversor, tienda</p>
+<h1>🏭 Fabrica de Apps por Voz</h1>
+<p>Di: calculadora, lista, tienda</p>
 
 <div class="input-box">
   <input id="texto" placeholder="Escribe o habla tu idea...">
@@ -32,7 +32,7 @@ input,textarea{padding:8px;margin:5px;border-radius:5px;border:none;width:90%}
   <button id="crear" onclick="crearAppDesdeTexto()">Crear</button>
 </div>
 
-<div id="lista-apps"><h2>Mis Apps</h2></div>
+<div id="lista-apps"><h2>Mis aplicaciones</h2></div>
 
 <script>
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -54,51 +54,15 @@ function crearAppDesdeTexto(){
 
   if(pedido.includes('tienda') || pedido.includes('mercado')){
     nombre = "🛒 Tienda Local";
-    codigo = `
-    <input id="busc${id}" placeholder="🔍 Buscar producto..." onkeyup="buscar${id}()">
-    <h3>➕ Publicar Producto</h3>
-    <input id="nom${id}" placeholder="Nombre del producto"><br>
-    <input id="pre${id}" type="number" placeholder="Precio $"><br>
-    <textarea id="desc${id}" placeholder="Descripción"></textarea><br>
-    <label><input type="checkbox" id="promo${id}"> 🔥 Marcar como Promoción</label><br>
-    <button onclick="guardarProd${id}()">Publicar</button>
-    <h3>🔥 Promociones</h3>
-    <div id="promos${id}"></div>
-    <h3>📦 Todos los Productos</h3>
-    <div id="lista${id}"></div>
-    <script>
-    function guardarProd${id}(){
-      if(!nom${id}.value ||!pre${id}.value) return alert('Completa nombre y precio');
-      let prods = JSON.parse(localStorage.getItem('tienda${id}') || '[]');
-      prods.push({n:nom${id}.value, p:pre${id}.value, d:desc${id}.value, promo:promo${id}.checked});
-      localStorage.setItem('tienda${id}', JSON.stringify(prods));
-      mostrarProd${id}();
-      nom${id}.value=''; pre${id}.value=''; desc${id}.value=''; promo${id}.checked=false;
-    }
-    function mostrarProd${id}(){
-      let prods = JSON.parse(localStorage.getItem('tienda${id}') || '[]');
-      let promos = prods.filter(p=>p.promo);
-      let normales = prods.filter(p=>!p.promo);
-      promos${id}.innerHTML = promos.map(p=>'<div class="producto promo"><span class=badge>OFERTA</span><br><b>'+p.n+'</b><br>$'+p.p+'<br><small>'+p.d+'</small></div>').join('') || '<p>No hay promos</p>';
-      lista${id}.innerHTML = normales.map(p=>'<div class=producto><b>'+p.n+'</b><br>$'+p.p+'<br><small>'+p.d+'</small></div>').join('') || '<p>No hay productos</p>';
-    }
-    function buscar${id}(){
-      let txt = busc${id}.value.toLowerCase();
-      let prods = JSON.parse(localStorage.getItem('tienda${id}') || '[]');
-      let filtrados = prods.filter(p=>p.n.toLowerCase().includes(txt));
-      lista${id}.innerHTML = filtrados.map(p=>'<div class=producto><b>'+p.n+'</b><br>$'+p.p+'<br><small>'+p.d+'</small></div>').join('');
-    }
-    mostrarProd${id}();
-    </script>`;
+    codigo = '<input id="busc'+id+'" placeholder="🔍 Buscar producto..." onkeyup="buscar'+id+'()"><br><h3>➕ Publicar Producto</h3><input id="nom'+id+'" placeholder="Nombre del producto"><br><input id="pre'+id+'" type="number" placeholder="Precio $"><br><textarea id="desc'+id+'" placeholder="Descripcion"></textarea><br><label><input type="checkbox" id="promo'+id+'"> 🔥 Marcar como Promocion</label><br><button onclick="guardarProd'+id+'()">Publicar</button><h3>🔥 Promociones</h3><div id="promos'+id+'"></div><h3>📦 Todos los Productos</h3><div id="lista'+id+'"></div><script>function guardarProd'+id+'(){if(!nom'+id+'.value ||!pre'+id+'.value) return alert("Completa nombre y precio");let prods = JSON.parse(localStorage.getItem("tienda'+id+'") || "[]");prods.push({n:nom'+id+'.value, p:pre'+id+'.value, d:desc'+id+'.value, promo:promo'+id+'.checked});localStorage.setItem("tienda'+id+'", JSON.stringify(prods));mostrarProd'+id+'();nom'+id+'.value=""; pre'+id+'.value=""; desc'+id+'.value=""; promo'+id+'.checked=false;}function mostrarProd'+id+'(){let prods = JSON.parse(localStorage.getItem("tienda'+id+'") || "[]");let promos = prods.filter(p=>p.promo);let normales = prods.filter(p=>!p.promo);promos'+id+'.innerHTML = promos.map(p=>"<div class=producto promo><span class=badge>OFERTA</span><br><b>"+p.n+"</b><br>$"+p.p+"<br><small>"+p.d+"</small></div>").join("") || "<p>No hay promos</p>";lista'+id+'.innerHTML = normales.map(p=>"<div class=producto><b>"+p.n+"</b><br>$"+p.p+"<br><small>"+p.d+"</small></div>").join("") || "<p>No hay productos</p>";}function buscar'+id+'(){let txt = busc'+id+'.value.toLowerCase();let prods = JSON.parse(localStorage.getItem("tienda'+id+'") || "[]");let filtrados = prods.filter(p=>p.n.toLowerCase().includes(txt));lista'+id+'.innerHTML = filtrados.map(p=>"<div class=producto><b>"+p.n+"</b><br>$"+p.p+"<br><small>"+p.d+"</small></div>").join("");}mostrarProd'+id+'();</'+'script>';
   }
   else if(pedido.includes('calculadora')){
     nombre = "🧮 Calculadora";
-    codigo = `<input id="a${id}" type="number"><input id="b${id}" type="number"><br>
-    <button onclick="alert(Number(a${id}.value)+Number(b${id}.value))">+</button>`;
+    codigo = '<input id="a'+id+'" type="number"><input id="b'+id+'" type="number"><br><button onclick="alert(Number(a'+id+'.value)+Number(b'+id+'.value))">Sumar</button>';
   }
   else if(pedido.includes('lista')){
     nombre = "📝 Lista";
-    codigo = `<input id="t${id}"><button onclick="l${id}.innerHTML+='<li>'+t${id}.value+'</li>';t${id}.value=''">Agregar</button><ul id="l${id}"></ul>`;
+    codigo = '<input id="t'+id+'"><button onclick="l'+id+'.innerHTML+=\'<li>\'+t'+id+'.value+\'</li>\';t'+id+'.value=\'\'">Agregar</button><ul id="l'+id+'"></ul>';
   }
 
   let apps = JSON.parse(localStorage.getItem('misApps') || '[]');
@@ -109,13 +73,10 @@ function crearAppDesdeTexto(){
 
 function cargarApps(){
   let apps = JSON.parse(localStorage.getItem('misApps') || '[]');
-  let html = '<h2>Mis Apps</h2>';
-  if(apps.length === 0) html += '<p>Aún no creaste ninguna app</p>';
+  let html = '<h2>Mis aplicaciones</h2>';
+  if(apps.length === 0) html += '<p>Aun no creaste ninguna app</p>';
   apps.forEach(app => {
-    html += `<div class="app-box"><b>${app.nombre}</b><br><small>Pedido: "${app.pedido}"</small><br>
-    <button class="btn btn-abrir" onclick="abrirApp(${app.id})">Abrir</button>
-    <button class="btn btn-borrar" onclick="borrarApp(${app.id})">Borrar</button>
-    <div class="app-contenido" id="app-${app.id}">${app.codigo}</div></div>`;
+    html += '<div class="app-box"><b>'+app.nombre+'</b><br><small>Pedido: "'+app.pedido+'"</small><br><button class="btn btn-abrir" onclick="abrirApp('+app.id+')">Abrir</button><button class="btn btn-borrar" onclick="borrarApp('+app.id+')">Borrar</button><div class="app-contenido" id="app-'+app.id+'">'+app.codigo+'</div></div>';
   });
   document.getElementById('lista-apps').innerHTML = html;
 }
