@@ -1,20 +1,4 @@
-
 <!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fábrica de Apps por Voz</title>
-<style>
-body{background:#0f172a;color:#fff;font-family:sans-serif;padding:20px}
-h1{color:#38bdf8;text-align:center}
-.input-box{display:flex;gap:10px;margin:20px 0}
-#texto{flex:1;padding:12px;border-radius:8px;border:none;background:#1e293b;color:#fff}
-#mic{width:50px;height:50px;border-radius:50%;background:#22c55e;border:none;font-size:24px;cursor:pointer}
-#crear{background:#38bdf8;color:#000;padding:12px 20px;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
-.app-box{background:#1e293b;padding:15px;border-radius:10px;margin:15px 0}
-.btn{padding
-     <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -102,9 +86,7 @@ function crearAppDesdeTexto(){
       let txt = busc${id}.value.toLowerCase();
       let prods = JSON.parse(localStorage.getItem('tienda${id}') || '[]');
       let filtrados = prods.filter(p=>p.n.toLowerCase().includes(txt));
-    
-      lista${id}.innerHTML = filtrados.map(p=>'<div class=producto><b>'+p.n+'</b><br>$'+p.p
-          lista${id}.innerHTML = filtrados.map(p=>'<div class=producto><b>'+p.n+'</b><br>$'+p.p+'<br><small>'+p.d+'</small></div>').join('');
+      lista${id}.innerHTML = filtrados.map(p=>'<div class=producto><b>'+p.n+'</b><br>$'+p.p+'<br><small>'+p.d+'</small></div>').join('');
     }
     mostrarProd${id}();
     </script>`;
