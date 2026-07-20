@@ -15,6 +15,7 @@ h1{color:#38bdf8}
 .btn{padding:8px 12px;border:none;border-radius:6px;font-weight:bold;margin:5px;cursor:pointer}
 .btn-abrir{background:#22c55e;color:#000}
 .btn-borrar{background:#ef4444;color:#fff}
+.btn-publicar{background:#38bdf8;color:#000}
 .app-contenido{display:none;margin-top:15px;border-top:1px solid #444;padding-top:15px}
 .producto{background:#334155;padding:10px;border-radius:8px;margin:8px 0}
 .promo{border:2px solid #f59e0b;background:#422006}
@@ -52,9 +53,43 @@ function crearAppDesdeTexto(){
   let codigo = '';
   let nombre = 'App';
 
-  if(pedido.includes('tienda') || pedido.includes('mercado')){
+  if(pedido.includes('tienda') || pedido.includes('mercado') || pedido.includes('venta')){
     nombre = "🛒 Tienda Local";
-    codigo = '<input id="busc'+id+'" placeholder="🔍 Buscar producto..." onkeyup="buscar'+id+'()"><br><h3>➕ Publicar Producto</h3><input id="nom'+id+'" placeholder="Nombre del producto"><br><input id="pre'+id+'" type="number" placeholder="Precio $"><br><textarea id="desc'+id+'" placeholder="Descripcion"></textarea><br><label><input type="checkbox" id="promo'+id+'"> 🔥 Marcar como Promocion</label><br><button onclick="guardarProd'+id+'()">Publicar</button><h3>🔥 Promociones</h3><div id="promos'+id+'"></div><h3>📦 Todos los Productos</h3><div id="lista'+id+'"></div><script>function guardarProd'+id+'(){if(!nom'+id+'.value ||!pre'+id+'.value) return alert("Completa nombre y precio");let prods = JSON.parse(localStorage.getItem("tienda'+id+'") || "[]");prods.push({n:nom'+id+'.value, p:pre'+id+'.value, d:desc'+id+'.value, promo:promo'+id+'.checked});localStorage.setItem("tienda'+id+'", JSON.stringify(prods));mostrarProd'+id+'();nom'+id+'.value=""; pre'+id+'.value=""; desc'+id+'.value=""; promo'+id+'.checked=false;}function mostrarProd'+id+'(){let prods = JSON.parse(localStorage.getItem("tienda'+id+'") || "[]");let promos = prods.filter(p=>p.promo);let normales = prods.filter(p=>!p.promo);promos'+id+'.innerHTML = promos.map(p=>"<div class=producto promo><span class=badge>OFERTA</span><br><b>"+p.n+"</b><br>$"+p.p+"<br><small>"+p.d+"</small></div>").join("") || "<p>No hay promos</p>";lista'+id+'.innerHTML = normales.map(p=>"<div class=producto><b>"+p.n+"</b><br>$"+p.p+"<br><small>"+p.d+"</small></div>").join("") || "<p>No hay productos</p>";}function buscar'+id+'(){let txt = busc'+id+'.value.toLowerCase();let prods = JSON.parse(localStorage.getItem("tienda'+id+'") || "[]");let filtrados = prods.filter(p=>p.n.toLowerCase().includes(txt));lista'+id+'.innerHTML = filtrados.map(p=>"<div class=producto><b>"+p.n+"</b><br>$"+p.p+"<br><small>"+p.d+"</small></div>").join("");}mostrarProd'+id+'();</'+'script>';
+    codigo = `
+      <input id="busc${id}" placeholder="🔍 Buscar producto..." onkeyup="buscar${id}()"><br>
+      <h3>➕ Publicar Producto</h3>
+      <input id="nom${id}" placeholder="Nombre del producto"><br>
+      <input id="pre${id}" type="number" placeholder="Precio $"><br>
+      <textarea id="desc${id}" placeholder="Descripcion"></textarea><br>
+      <label><input type="checkbox" id="promo${id}"> 🔥 Marcar como Promocion</label><br>
+      <button class="btn btn-publicar" onclick="guardarProd${id}()">Publicar</button>
+      <h3>🔥 Promociones</h3><div id="promos${id}"></div>
+      <h3>📦 Todos los Productos</h3><div id="lista${id}"></div>
+      <script>
+      function guardarProd${id}(){
+        if(!nom${id}.value ||!pre${id}.value) return alert("Completa nombre y precio");
+        let prods = JSON.parse(localStorage.getItem("tienda${id}") || "[]");
+        prods.push({n:nom${id}.value, p:pre${id}.value, d:desc${id}.value, promo:promo${id}.checked});
+        localStorage.setItem("tienda${id}", JSON.stringify(prods));
+        mostrarProd${id}();
+        nom${id}.value=""; pre${id}.value=""; desc${id}.value=""; promo${id}.checked=false;
+        alert("Producto publicado!");
+      }
+      function mostrarProd${id}(){
+        let prods = JSON.parse(localStorage.getItem("tienda${id}") || "[]");
+        let promos = prods.filter(p=>p.promo);
+        let normales = prods.filter(p=>!p.promo);
+        promos${id}.innerHTML = promos.map(p=>"<div class=producto promo><span class=badge>OFERTA</span><br><b>"+p.n+"</b><br>$"+p.p+"<br><small>"+p.d+"</small></div>").join("") || "<p>No hay promos</p>";
+        lista${id}.innerHTML = normales.map(p=>"<div class=producto><b>"+p.n+"</b><br>$"+p.p+"<br><small>"+p.d+"</small></div>").join("") || "<p>No hay productos</p>";
+      }
+      function buscar${id}(){
+        let txt = busc${id}.value.toLowerCase();
+        let prods = JSON.parse(localStorage.getItem("tienda${id}") || "[]");
+        let filtrados = prods.filter(p=>p.n.toLowerCase().includes(txt));
+        lista${id}.innerHTML = filtrados.map(p=>"<div class=producto><b>"+p.n+"</b><br>$"+p.p+"<br><small>"+p.d+"</small></div>").join("");
+      }
+      mostrarProd${id}();
+      </` + `script>`;
   }
   else if(pedido.includes('calculadora')){
     nombre = "🧮 Calculadora";
