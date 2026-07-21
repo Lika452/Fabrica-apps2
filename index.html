@@ -7,24 +7,26 @@
 <style>
 *{box-sizing:border-box}
 body{background:#0f0f0f;color:#fff;font-family:'Arial';margin:0;padding:0}
-.header{background:linear-gradient(90deg,#ff4b2b,#ff416c);padding:25px 15px;text-align:center;position:sticky;top:0;z-index:10}
-.header h1{margin:0;font-size:26px}
+.header{background:linear-gradient(90deg,#ff4b2b,#ff416c);padding:25px 15px;text-align:center;position:sticky;top:0;z-index:10;box-shadow:0 4px 15px rgba(255,65,108,0.4)}
+.header h1{margin:0;font-size:26px;letter-spacing:1px}
 .header p{margin:5px 0 0 0;opacity:0.9;font-size:14px}
 .container{padding:15px;max-width:700px;margin:auto}
-.cats{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:15px}
-.btn-cat{background:#1f1f1f;color:#ff416c;border:2px solid #ff416c;padding:10px 18px;border-radius:25px;cursor:pointer;font-weight:bold;white-space:nowrap}
-.btn-cat.active{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none}
-.producto{background:#1a1a1a;border:1px solid #333;border-radius:15px;padding:15px;margin:12px 0;box-shadow:0 4px 10px rgba(0,0,0,0.5)}
+.cats{display:flex;gap:8px;overflow-x:auto;padding:10px 0;margin-bottom:15px}
+.btn-cat{background:#1f1f1f;color:#ff416c;border:2px solid #ff416c;padding:10px 18px;border-radius:25px;cursor:pointer;font-weight:bold;white-space:nowrap;transition:0.3s}
+.btn-cat.active{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none;transform:scale(1.05)}
+.producto{background:#1a1a1a;border:1px solid #333;border-radius:15px;padding:15px;margin:12px 0;box-shadow:0 4px 10px rgba(0,0,0,0.5);transition:0.3s}
+.producto:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(255,65,108,0.3)}
 .producto.promo{border:2px solid #ffd700;box-shadow:0 0 20px rgba(255,215,0,0.4);animation:brillo 2s infinite}
 @keyframes brillo{0%,100%{box-shadow:0 0 20px rgba(255,215,0,0.4)}50%{box-shadow:0 0 30px rgba(255,215,0,0.8)}}
-.producto h3{margin:0 0 8px 0;color:#ff416c}
+.producto h3{margin:0 0 8px 0;color:#ff416c;font-size:18px}
 .precio{color:#00ff88;font-size:22px;font-weight:bold}
-.stock{color:#aaa;font-size:12px}
+.stock{color:#aaa;font-size:12px;margin-top:5px}
 .btn-wsp{background:#25D366;color:#fff;border:none;padding:14px;border-radius:12px;width:100%;font-size:16px;cursor:pointer;font-weight:bold;margin-top:20px}
 .form{background:#1a1a1a;padding:20px;border-radius:15px;margin-top:20px;border:1px solid #333}
 input,select{background:#2a2a2a;color:#fff;border:1px solid #444;padding:12px;border-radius:10px;width:100%;margin:8px 0;font-size:15px}
-.btn-pub{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none;padding:14px;border-radius:12px;width:100%;font-size:16px;cursor:pointer;font-weight:bold;margin-top:10px}
-.btn-pub:hover{opacity:0.9}
+label{display:flex;align-items:center;gap:8px;margin:10px 0}
+.btn-pub{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none;padding:14px;border-radius:12px;width:100%;font-size:16px;cursor:pointer;font-weight:bold;margin-top:10px;transition:0.3s}
+.btn-pub:hover{opacity:0.9;transform:scale(1.02)}
 </style>
 </head>
 <body>
@@ -46,9 +48,7 @@ input,select{background:#2a2a2a;color:#fff;border:1px solid #444;padding:12px;bo
 <option value="Bebidas">🥤 Bebidas</option>
 <option value="Kiosco">🍫 Kiosco</option>
 </select>
-<label style="display:flex;align-items:center;gap:8px;margin:10px 0">
-<input type="checkbox" id="promo"> <span>🔥 En promoción</span>
-</label>
+<label><input type="checkbox" id="promo"> <span>🔥 En promoción</span></label>
 <button class="btn-pub" onclick="agregar()">Publicar producto</button>
 </div>
 
@@ -70,9 +70,9 @@ document.getElementById('productos').innerHTML=lista.length?lista.map((p,i)=>`
 <h3>${p.nombre}</h3>
 <div class="precio">$${p.precio}</div>
 <div class="stock">Stock: ${p.stock}</div>
-${p.promo?'<div style="color:#ffd700;margin-top:5px">🔥 EN PROMO</div>':''}
+${p.promo?'<div style="color:#ffd700;margin-top:5px;font-weight:bold">🔥 EN PROMO</div>':''}
 </div>
-`).join(''):'<p style="text-align:center;opacity:0.6">No hay productos. Agrega uno abajo</p>';
+`).join(''):'<p style="text-align:center;opacity:0.6;padding:20px">No hay productos. Agrega uno abajo</p>';
 }
 
 function filtrar(c){catActiva=c;mostrar()}
@@ -83,12 +83,13 @@ let pr=document.getElementById('precio').value;
 let st=document.getElementById('stock').value;
 let ca=document.getElementById('categoria').value;
 let pm=document.getElementById('promo').checked;
-if(!n||!pr)return alert('Completa nombre y precio');
+if(!n||!pr){alert('Completa nombre y precio');return}
 productos.push({nombre:n,precio:pr,stock:st,categoria:ca,promo:pm});
 localStorage.setItem('productos',JSON.stringify(productos));
 document.getElementById('nombre').value='';
 document.getElementById('precio').value='';
 document.getElementById('stock').value='';
+document.getElementById('promo').checked=false;
 mostrar();
 }
 mostrar();
