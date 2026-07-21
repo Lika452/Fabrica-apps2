@@ -12,6 +12,9 @@ body{background:#0f0f0f;color:#fff;font-family:Arial;margin:0;padding:0 0 80px 0
 .header h1{margin:5px 0;font-size:26px;font-weight:900}
 .info-bar{background:#1a1a1a;padding:10px;text-align:center;font-size:13px;border-bottom:2px solid #ff416c}
 .info-bar span{margin:0 10px;color:#00ff88;font-weight:bold}
+.btn-voz{background:linear-gradient(90deg,#25D366,#128C7E);color:#fff;border:none;padding:12px;border-radius:50px;width:100%;font-weight:bold;font-size:16px;cursor:pointer;margin:15px 0;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-voz.grabando{background:#ff416c;animation:parpadeo 0.8s infinite}
+@keyframes parpadeo{0%,100%{opacity:1}50%{opacity:0.5}}
 .carrito-btn{position:fixed;bottom:20px;right:20px;background:#25D366;width:65px;height:65px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;z-index:20}
 .carrito-contador{position:absolute;top:-5px;right:-5px;background:#ff416c;color:#fff;border-radius:50%;width:26px;height:26px;font-size:13px;display:flex;align-items:center;justify-content:center;font-weight:bold}
 .container{padding:15px;max-width:700px;margin:auto}
@@ -22,7 +25,6 @@ body{background:#0f0f0f;color:#fff;font-family:Arial;margin:0;padding:0 0 80px 0
 .img-prod{width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:10px}
 .precio{color:#00ff88;font-size:22px;font-weight:bold}
 .btn-add{background:#ff416c;color:#fff;border:none;padding:10px;border-radius:10px;width:100%;margin-top:8px;cursor:pointer;font-weight:bold}
-.btn-borrar-prod{position:absolute;top:10px;right:10px;background:#ff0000;color:#fff;border:none;padding:5px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:bold}
 .form{background:#1a1a1a;padding:20px;border-radius:15px;margin-top:20px;border:1px solid #333;display:none}
 input{background:#2a2a2a;color:#fff;border:1px solid #444;padding:12px;border-radius:10px;width:100%;margin:8px 0}
 .btn-pub{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none;padding:14px;border-radius:12px;width:100%;font-weight:bold;cursor:pointer;margin-top:8px}
@@ -32,7 +34,6 @@ input{background:#2a2a2a;color:#fff;border:1px solid #444;padding:12px;border-ra
 .btn-enviar{background:#25D366;color:#fff;border:none;padding:14px;border-radius:12px;width:100%;font-weight:bold;margin-top:10px;cursor:pointer}
 .item-carrito{display:flex;justify-content:space-between;align-items:center;margin:12px 0;padding:10px;background:#222;border-radius:10px}
 .btn-borrar{background:#ff416c;color:#fff;border:none;padding:5px 10px;border-radius:8px;cursor:pointer;font-size:12px}
-.preview{width:100%;height:150px;object-fit:cover;border-radius:10px;margin:8px 0;display:none;border:2px dashed #ff416c}
 .btn-admin{position:fixed;top:10px;right:10px;background:#333;color:#fff;border:none;padding:8px 12px;border-radius:8px;font-size:12px;cursor:pointer;z-index:25}
 </style>
 </head>
@@ -43,22 +44,23 @@ input{background:#2a2a2a;color:#fff;border:1px solid #444;padding:12px;border-ra
 <h1>SUPER PI</h1>
 </div>
 <div class="info-bar">
-<span>🕒 Horario: 9:00 a 22:00hs</span> | <span>🚚 Envío Gratis desde $10000</span> | <span>📍 Calchaquí</span>
+<span>🕒 9:00 a 22:00hs</span> | <span>🚚 Envío Gratis +$10000</span>
 </div>
 <div class="container">
+<button class="btn-voz" id="btnVoz" onclick="iniciarVoz()">🎤 Hace tu pedido hablando</button>
 <div id="categorias"></div><div id="productos"></div>
-<div class="form" id="panelAdmin"><h2>➕ Panel Admin</h2><input id="nombre" placeholder="Nombre del producto"><input id="precio" type="number" placeholder="Precio $"><input id="stock" type="number" placeholder="Stock"><input id="fotoFile" type="file" accept="image/*" onchange="previsualizar(event)"><img id="previewFoto" class="preview"><input id="logoFile" type="file" accept="image/*" onchange="cambiarLogo(event)"><select id="categoria"><option>Polleria</option><option>Bebidas</option><option>Kiosco</option></select><label><input type="checkbox" id="promo"> 🔥 En promoción</label><button class="btn-pub" onclick="agregar()">Publicar</button></div></div>
+<div class="form" id="panelAdmin"><h2>➕ Panel Admin</h2><input id="nombre" placeholder="Nombre del producto"><input id="precio" type="number" placeholder="Precio $"><input id="stock" type="number" placeholder="Stock"><select id="categoria"><option>Polleria</option><option>Bebidas</option><option>Kiosco</option></select><label><input type="checkbox" id="promo"> 🔥 En promoción</label><button class="btn-pub" onclick="agregar()">Publicar</button></div></div>
 <div class="carrito-btn" onclick="abrirCarrito()">🛒<div class="carrito-contador" id="contador">0</div></div>
 <div class="modal" id="modalCarrito"><div class="modal-content"><button class="btn-cerrar" onclick="cerrarCarrito()">X</button><h2>🛒 Tu Pedido</h2><div id="listaCarrito"></div><input id="nombreCliente" placeholder="Tu nombre"><input id="dirCliente" placeholder="Tu dirección"><button class="btn-enviar" onclick="enviarPedido()">Enviar por WhatsApp</button></div></div>
 <script>
-const CLAVE_ADMIN="Admin";let productos=JSON.parse(localStorage.getItem('productos'))||[];let carrito=JSON.parse(localStorage.getItem('carrito'))||[];let catActiva='Todas';let fotoBase64='';let logoBase64=localStorage.getItem('logoLika')||'https://i.imgur.com/8K3mZQp.png';const categorias=['Todas','Polleria','Bebidas','Kiosco'];const MI_NUMERO='5493483497130';document.getElementById('logoTienda').src=logoBase64;
-function mostrarPanel(){let clave=prompt('Ingresa clave de Admin:');if(clave==CLAVE_ADMIN){document.getElementById('panelAdmin').style.display='block';alert('Panel activado')}else{alert('Clave incorrecta')}}
-function previsualizar(e){const file=e.target.files[0];const reader=new FileReader();reader.onload=function(event){fotoBase64=event.target.result;document.getElementById('previewFoto').src=fotoBase64;document.getElementById('previewFoto').style.display='block'};reader.readAsDataURL(file);}
-function cambiarLogo(e){const file=e.target.files[0];const reader=new FileReader();reader.onload=function(event){logoBase64=event.target.result;localStorage.setItem('logoLika',logoBase64);document.getElementById('logoTienda').src=logoBase64};reader.readAsDataURL(file);}
-function mostrar(){document.getElementById('categorias').innerHTML=categorias.map(c=>`<button class="btn-cat ${catActiva==c?'active':''}" onclick="filtrar('${c}')">${c}</button>`).join('');let lista=catActiva=='Todas'?productos:productos.filter(p=>p.categoria==catActiva);let esAdmin=document.getElementById('panelAdmin').style.display=='block';document.getElementById('productos').innerHTML=lista.map((p,i)=>`<div class="producto ${p.promo?'promo':''}">${esAdmin?`<button class="btn-borrar-prod" onclick="borrarProducto(${i})">X</button>`:''}<img src="${p.foto||'https://via.placeholder.com/300x180'}" class="img-prod"><h3>${p.nombre}</h3><div class="precio">$${p.precio}</div><div style="color:#aaa;font-size:12px">Stock: ${p.stock}</div>${p.promo?'<div style="color:#ffd700">🔥 EN PROMO</div>':''}<button class="btn-add" onclick="addCarrito('${p.nombre}',${p.precio})">Agregar</button></div>`).join('');document.getElementById('contador').innerText=carrito.reduce((a,b)=>a+b.cant,0);}
+const CLAVE_ADMIN="Admin";let productos=JSON.parse(localStorage.getItem('productos'))||[];let carrito=JSON.parse(localStorage.getItem('carrito'))||[];let catActiva='Todas';const categorias=['Todas','Polleria','Bebidas','Kiosco'];const MI_NUMERO='5493483497130';let recognition;
+if('webkitSpeechRecognition' in window){recognition=new webkitSpeechRecognition();recognition.lang='es-AR';recognition.continuous=false;}
+function iniciarVoz(){if(!recognition)return alert('Tu celu no soporta voz');recognition.start();document.getElementById('btnVoz').classList.add('grabando');document.getElementById('btnVoz').innerHTML='🔴 Escuchando... habla ahora';recognition.onresult=function(e){let texto=e.results[0][0].transcript.toLowerCase();document.getElementById('btnVoz').classList.remove('grabando');document.getElementById('btnVoz').innerHTML='🎤 Hace tu pedido hablando';procesarVoz(texto)};recognition.onend=function(){document.getElementById('btnVoz').classList.remove('grabando');document.getElementById('btnVoz').innerHTML='🎤 Hace tu pedido hablando'}}
+function procesarVoz(texto){alert('Entendí: "'+texto+'" \n\nAhora busca el producto y agregalo');productos.forEach(p=>{if(texto.includes(p.nombre.toLowerCase())){addCarrito(p.nombre,p.precio)}});abrirCarrito()}
+function mostrarPanel(){let clave=prompt('Ingresa clave de Admin:');if(clave==CLAVE_ADMIN){document.getElementById('panelAdmin').style.display='block'}else{alert('Clave incorrecta')}}
+function mostrar(){document.getElementById('categorias').innerHTML=categorias.map(c=>`<button class="btn-cat ${catActiva==c?'active':''}" onclick="filtrar('${c}')">${c}</button>`).join('');let lista=catActiva=='Todas'?productos:productos.filter(p=>p.categoria==catActiva);document.getElementById('productos').innerHTML=lista.map(p=>`<div class="producto ${p.promo?'promo':''}"><img src="https://via.placeholder.com/300x180" class="img-prod"><h3>${p.nombre}</h3><div class="precio">$${p.precio}</div><div style="color:#aaa;font-size:12px">Stock: ${p.stock}</div>${p.promo?'<div style="color:#ffd700">🔥 EN PROMO</div>':''}<button class="btn-add" onclick="addCarrito('${p.nombre}',${p.precio})">Agregar</button></div>`).join('');document.getElementById('contador').innerText=carrito.reduce((a,b)=>a+b.cant,0);}
 function filtrar(c){catActiva=c;mostrar()}
-function agregar(){let n=document.getElementById('nombre').value;let pr=document.getElementById('precio').value;if(!n||!pr)return alert('Completa nombre y precio');productos.push({nombre:n,precio:pr,stock:document.getElementById('stock').value,categoria:document.getElementById('categoria').value,foto:fotoBase64,promo:document.getElementById('promo').checked});localStorage.setItem('productos',JSON.stringify(productos));document.querySelectorAll('#nombre,#precio,#stock').forEach(i=>i.value='');document.getElementById('previewFoto').style.display='none';fotoBase64='';mostrar();}
-function borrarProducto(i){if(confirm('¿Borrar?')){productos.splice(i,1);localStorage.setItem('productos',JSON.stringify(productos));mostrar();}}
+function agregar(){let n=document.getElementById('nombre').value;let pr=document.getElementById('precio').value;if(!n||!pr)return alert('Completa nombre y precio');productos.push({nombre:n,precio:pr,stock:document.getElementById('stock').value,categoria:document.getElementById('categoria').value,promo:document.getElementById('promo').checked});localStorage.setItem('productos',JSON.stringify(productos));document.querySelectorAll('#nombre,#precio,#stock').forEach(i=>i.value='');mostrar();}
 function addCarrito(n,p){let item=carrito.find(x=>x.nombre==n);if(item)item.cant++;else carrito.push({nombre:n,precio:p,cant:1});localStorage.setItem('carrito',JSON.stringify(carrito));mostrar();}
 function borrarCarrito(n){carrito=carrito.filter(x=>x.nombre!=n);localStorage.setItem('carrito',JSON.stringify(carrito));abrirCarrito();mostrar();}
 function abrirCarrito(){document.getElementById('modalCarrito').style.display='block';document.getElementById('listaCarrito').innerHTML=carrito.length?carrito.map(i=>`<div class="item-carrito"><span>${i.nombre} x${i.cant} = $${i.precio*i.cant}</span><button class="btn-borrar" onclick="borrarCarrito('${i.nombre}')">Borrar</button></div>`).join('')+'<hr><b>Total: $'+carrito.reduce((a,b)=>a+b.precio*b.cant,0)+'</b>':'<p>Vacío</p>';}
