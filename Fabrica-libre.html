@@ -7,14 +7,18 @@
 <style>
 body{background:#0f172a;color:white;font-family:Arial;padding:15px}
 .container{max-width:600px;margin:auto;background:#1e293b;padding:20px;border-radius:15px}
-input,textarea{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;background:#334155;color:white}
+input,textarea,select{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;background:#334155;color:white}
 button{padding:10px 15px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:3px}
 .btn-publicar{background:#38bdf8;color:black;width:100%}
-.btn-wsp{background:#25D366;color:white;width:100%;margin-top:5px}
-.btn-borrar{background:#ef4444;color:white;font-size:12px;padding:5px 10px}
+.btn-wsp{background:#25D366;color:white;width:100%}
+.btn-borrar{background:#ef4444;color:white;font-size:12px}
+.btn-carrito{background:#f59e0b;color:black}
 .producto{background:#334155;padding:12px;margin:8px 0;border-radius:10px;overflow:auto}
 .producto img{width:80px;height:80px;border-radius:10px;object-fit:cover;float:left;margin-right:10px}
 .promo{border:2px solid orange}
+.categoria{background:#475569;padding:3px 8px;border-radius:5px;font-size:12px}
+.stock{color:#4ade80;font-weight:bold}
+.carrito{position:fixed;bottom:20px;right:20px;background:#25D366;padding:15px;border-radius:50%;font-size:24px}
 </style>
 </head>
 <body>
@@ -25,10 +29,22 @@ button{padding:10px 15px;border:none;border-radius:8px;font-weight:bold;cursor:p
 <h3>🛒 Tienda Local</h3>
 
 <input id="buscar" placeholder="🔍 Buscar producto..." onkeyup="mostrar()">
+<select id="filtroCat" onchange="mostrar()">
+<option value="">Todas las Categorias</option>
+<option>Verduleria</option>
+<option>Almacen</option>
+<option>Bebidas</option>
+</select>
 
 <input id="nombre" placeholder="Nombre del producto">
 <input id="precio" type="number" placeholder="Precio">
-<textarea id="desc" placeholder="Descripción y stock"></textarea>
+<input id="stock" type="number" placeholder="Stock disponible">
+<select id="categoria">
+<option>Verduleria</option>
+<option>Almacen</option>
+<option>Bebidas</option>
+</select>
+<textarea id="desc" placeholder="Descripción"></textarea>
 <input id="foto" type="file" accept="image/*">
 
 <label><input type="checkbox" id="promo"> 🔥 Promocion</label><br><br>
@@ -44,8 +60,11 @@ button{padding:10px 15px;border:none;border-radius:8px;font-weight:bold;cursor:p
 
 </div>
 
+<div class="carrito" onclick="enviarPedido()">🛒<span id="contador">0</span></div>
+
 <script>
 let productos = JSON.parse(localStorage.getItem('productos')) || [];
+let carrito = [];
 const MI_NUMERO = "5493483497130";
 
 function guardar() {
@@ -55,23 +74,45 @@ function guardar() {
 function publicar() {
   let n = document.getElementById('nombre').value;
   let p = document.getElementById('precio').value;
+  let s = document.getElementById('stock').value;
+  let c = document.getElementById('categoria').value;
   let d = document.getElementById('desc').value;
   let pr = document.getElementById('promo').checked;
   let file = document.getElementById('foto').files[0];
   
-  if(n == '' || p == '') {alert('Falta nombre o precio'); return;}
+  if(n == '' || p == '' || s == '') {alert('Falta nombre, precio o stock'); return;}
   
   if(file) {
     let reader = new FileReader();
     reader.onload = function(e) {
-      productos.push({nombre:n, precio:p, desc:d, promo:pr, foto:e.target.result});
+      productos.push({nombre:n, precio:p, stock:s, cat:c, desc:d, promo:pr, foto:e.target.result});
       guardar(); mostrar(); limpiar();
     }
     reader.readAsDataURL(file);
   } else {
-    productos.push({nombre:n, precio:p, desc:d, promo:pr, foto:''});
+    productos.push({nombre:n, precio:p, stock:s, cat:c, desc:d, promo:pr, foto:''});
     guardar(); mostrar(); limpiar();
   }
+}
+
+function agregarCarrito(i) {
+  carrito.push(productos[i]);
+  document.getElementById('contador').innerText = carrito.length;
+  alert(productos[i].nombre + ' agregado al carrito');
+}
+
+function enviarPedido() {
+  if(carrito.length == 0) {alert('Carrito vacio'); return;}
+  let msg = 'Hola! Quiero pedir:\n';
+  let total = 0;
+  for(let i=0; i<carrito.length; i++) {
+    msg += '- ' + carrito[i].nombre + ' $' + carrito[i].precio + '\n';
+    total += parseInt(carrito[i].precio);
+  }
+  msg += '\nTotal: $' + total;
+  window.open('https://wa.me/' + MI_NUMERO + '?text=' + encodeURIComponent(msg));
+  carrito = [];
+  document.getElementById('contador').innerText = 0;
 }
 
 function borrar(i) {
@@ -81,14 +122,10 @@ function borrar(i) {
   }
 }
 
-function pedirWsp(nom, pre) {
-  let msg = 'Hola! Quiero ' + nom + ' $' + pre;
-  window.open('https://wa.me/' + MI_NUMERO + '?text=' + encodeURIComponent(msg));
-}
-
 function limpiar() {
   document.getElementById('nombre').value = '';
   document.getElementById('precio').value = '';
+  document.getElementById('stock').value = '';
   document.getElementById('desc').value = '';
   document.getElementById('foto').value = '';
   document.getElementById('promo').checked = false;
@@ -97,15 +134,19 @@ function limpiar() {
 
 function mostrar() {
   let busq = document.getElementById('buscar').value.toLowerCase();
+  let cat = document.getElementById('filtroCat').value;
   let promos = ''; let todos = '';
   for(let i=0; i<productos.length; i++) {
-    if(productos[i].nombre.toLowerCase().includes(busq)) {
+    if(productos[i].nombre.toLowerCase().includes(busq) && (cat == '' || productos[i].cat == cat)) {
       let img = productos[i].foto? '<img src="' + productos[i].foto + '">' : '';
       let item = '<div class="producto ' + (productos[i].promo? 'promo' : '') + '">' + img + 
+      '<span class="categoria">' + productos[i].cat + '</span><br>' +
       '<b>' + productos[i].nombre + '</b> - $' + productos[i].precio + 
+      '<br><span class="stock">Stock: ' + productos[i].stock + '</span>' +
       '<br>' + productos[i].desc +
-      '<button class="btn-wsp" onclick="pedirWsp(\''+productos[i].nombre+'\','+productos[i].precio+')">Pedir por WhatsApp</button>' +
-      '<button class="btn-borrar" onclick="borrar('+i+')">🗑️ Borrar</button></div>';
+      '<button class="btn-carrito" onclick="agregarCarrito('+i+')">🛒 Agregar</button>' +
+      '<button class="btn-wsp" onclick="window.open(\'https://wa.me/'+MI_NUMERO+'?text=Hola! Quiero '+productos[i].nombre+'\')">Pedir</button>' +
+      '<button class="btn-borrar" onclick="borrar('+i+')">🗑️</button></div>';
       todos += item;
       if(productos[i].promo) promos += item;
     }
