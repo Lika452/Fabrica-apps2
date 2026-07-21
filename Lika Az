@@ -3,152 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fabrica de Apps por Voz</title>
+<title>Kiosco Polleria Lika</title>
 <style>
-body{background:#0f172a;color:white;font-family:Arial;padding:15px}
-.container{max-width:600px;margin:auto;background:#1e293b;padding:20px;border-radius:15px}
-input,textarea,select{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;background:#334155;color:white}
-button{padding:10px 15px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:3px}
-.btn-publicar{background:#38bdf8;color:black;width:100%}
-.btn-wsp{background:#25D366;color:white;width:100%}
-.btn-borrar{background:#ef4444;color:white;font-size:12px}
-.btn-carrito{background:#f59e0b;color:black}
-.producto{background:#334155;padding:12px;margin:8px 0;border-radius:10px;overflow:auto}
-.producto img{width:80px;height:80px;border-radius:10px;object-fit:cover;float:left;margin-right:10px}
-.promo{border:2px solid orange;animation:brillar 2s infinite}
-@keyframes brillar{0%{box-shadow:0 0 5px orange}50%{box-shadow:0 0 20px orange}100%{box-shadow:0 0 5px orange}}
-.categoria{background:#475569;padding:3px 8px;border-radius:5px;font-size:12px}
-.stock{color:#4ade80;font-weight:bold}
-.carrito{position:fixed;bottom:20px;right:20px;background:#25D366;padding:15px;border-radius:50%;font-size:24px;cursor:pointer;z-index:999}
-.contador{background:red;color:white;border-radius:50%;padding:2px 8px;position:absolute;top:-5px;right:-5px;font-size:14px}
-.notif{position:fixed;top:20px;right:20px;background:orange;padding:15px;border-radius:10px;display:none;z-index:999}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; background:#f5f5f5; padding: 10px; }
+.header { background: linear-gradient(90deg, #ff6b00, #ff3c00); color:white; padding:20px; text-align:center; border-radius:12px; margin-bottom:15px; }
+.header h2 { margin:5px 0; font-size:24px; }
+.header h3 { margin:5px 0; font-weight:normal; font-size:14px; }
+  #bannerPromo { display:none; background: linear-gradient(90deg, #ff6b00, #ff3c00); color:white; padding:15px; border-radius:12px; margin:15px 0; text-align:center; font-weight:bold; animation: parpadeo 1.2s infinite; }
+  @keyframes parpadeo { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); }
+.filtros { display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap; justify-content:center; }
+.filtros button { padding:10px 18px; border:none; border-radius:20px; background:white; cursor:pointer; font-weight:bold; }
+.filtros button.active { background:#ff6b00; color:white; }
+.productos { display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:15px; }
+.producto { background:white; border-radius:12px; padding:10px; text-align:center; position:relative; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+.producto img { width:100%; height:120px; object-fit:cover; border-radius:8px; }
+.promo { position:absolute; top:5px; right:5px; background:orange; color:white; padding:4px 8px; border-radius:10px; font-size:12px; font-weight:bold; }
+.btn-add { background:#25D366; color:white; border:none; padding:10px; width:100%; border-radius:8px; margin-top:8px; cursor:pointer; font-weight:bold; }
+.carrito-btn { position:fixed; bottom:20px; right:20px; background:#25D366; color:white; border:none; border-radius:50%; width:60px; height:60px; font-size:28px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.3); }
+.form-add { background:white; padding:15px; border-radius:12px; margin-top:20px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+.form-add input,.form-add select { width:100%; padding:10px; margin:8px 0; border:1px solid #ddd; border-radius:8px; }
+.form-add button { width:100%; padding:12px; background:#ff6b00; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
 </style>
 </head>
 <body>
-<div class="container">
-<h2>🏭 Fabrica de Apps por Voz</h2>
-<div class="container" style="background:#0f172a">
-<h3>🛒 Tienda Local</h3>
-<input id="buscar" placeholder="🔍 Buscar producto..." onkeyup="mostrar()">
-<select id="filtroCat" onchange="mostrar()">
-<option value="">Todas las Categorias</option>
-<option>Verduleria</option>
-<option>Almacen</option>
-<option>Bebidas</option>
-<option>Carniceria</option>
-</select>
-<input id="nombre" placeholder="Nombre del producto">
-<input id="precio" type="number" placeholder="Precio">
-<input id="stock" type="number" placeholder="Stock disponible">
-<select id="categoria">
-<option>Verduleria</option>
-<option>Almacen</option>
-<option>Bebidas</option>
-<option>Carniceria</option>
-</select>
-<textarea id="desc" placeholder="Descripción"></textarea>
-<input id="foto" type="file" accept="image/*">
-<label><input type="checkbox" id="promo"> 🔥 Promocion</label><br><br>
-<button class="btn-publicar" onclick="publicar()">Publicar</button>
-<h3>🔥 Promociones</h3>
-<div id="promos"></div>
-<h3>📦 Todos los Productos</h3>
-<div id="todos"></div>
+<div class="header">
+  <h2>🏬 Kiosco Polleria Lika</h2>
+  <h3>🛒 Kiosco, Bebidas y Pollos</h3>
 </div>
+<div id="bannerPromo">
+  🔥 ¡OFERTAS DE LA SEMANA! 🔥
+  <div id="listaPromos" style="font-size:14px; margin-top:8px;"></div>
 </div>
-<div class="carrito" onclick="enviarPedido()">🛒<span class="contador" id="contador">0</span></div>
-<div class="notif" id="notif">🔥 ¡Nueva Promocion Disponible!</div>
+<div class="filtros">
+  <button onclick="filtrar('todos')" class="active">Todos</button>
+  <button onclick="filtrar('Polleria')">Polleria</button>
+  <button onclick="filtrar('Bebidas')">Bebidas</button>
+  <button onclick="filtrar('Kiosco')">Kiosco</button>
+</div>
+<div class="productos" id="listaProductos"></div>
+<button class="carrito-btn" onclick="enviarWhatsApp()">🛒</button>
+<div class="form-add">
+  <h3>Agregar Producto</h3>
+  <input type="text" id="nombre" placeholder="Nombre del producto">
+  <input type="number" id="precio" placeholder="Precio $">
+  <input type="number" id="stock" placeholder="Stock">
+  <select id="categoria">
+    <option>Polleria</option>
+    <option>Bebidas</option>
+    <option>Kiosco</option>
+  </select>
+  <input type="file" id="foto" accept="image/*">
+  <label><input type="checkbox" id="promo"> En promoción</label>
+  <button onclick="agregarProducto()">Publicar producto</button>
+</div>
 <script>
 let productos = JSON.parse(localStorage.getItem('productos')) || [];
 let carrito = [];
-const MI_NUMERO = "5493483497130";
-window.onload = function() {
-  mostrar();
-  let promos = productos.filter(p => p.promo);
-  if(promos.length > 0) {
-    document.getElementById('notif').style.display = 'block';
-    setTimeout(() => {document.getElementById('notif').style.display = 'none'}, 4000);
-  }
+let categoriaActiva = 'todos';
+function mostrarProductos() {
+  const cont = document.getElementById('listaProductos');
+  const filtrados = categoriaActiva === 'todos'? productos : productos.filter(p => p.categoria === categoriaActiva);
+  if(filtrados.length === 0){ cont.innerHTML = '<p style="text-align:center; grid-column:1/-1;">No hay productos. Agrega uno abajo 👇</p>'; } 
+  else { cont.innerHTML = filtrados.map((p, i) => `<div class="producto">${p.promocion? '<span class="promo">PROMO</span>' : ''}<img src="${p.foto || 'https://via.placeholder.com/150/ff6b00/ffffff?text=Producto'}"><h4>${p.nombre}</h4><p style="font-weight:bold; color:#ff6b00;">$${p.precio}</p><p style="font-size:12px;">Stock: ${p.stock}</p><button class="btn-add" onclick="agregarCarrito(${i})">Agregar al carrito</button></div>`).join(''); }
+  mostrarBannerPromos();
 }
-function guardar() {
-  localStorage.setItem('productos', JSON.stringify(productos));
+function mostrarBannerPromos() {
+  const promos = productos.filter(p => p.promocion);
+  const banner = document.getElementById('bannerPromo');
+  const lista = document.getElementById('listaPromos');
+  if(promos.length > 0){ banner.style.display = 'block'; lista.innerHTML = promos.map(p => `• ${p.nombre}: $${p.precio}`).join('<br>'); } 
+  else { banner.style.display = 'none'; }
 }
-function publicar() {
-  let n = document.getElementById('nombre').value;
-  let p = document.getElementById('precio').value;
-  let s = document.getElementById('stock').value;
-  let c = document.getElementById('categoria').value;
-  let d = document.getElementById('desc').value;
-  let pr = document.getElementById('promo').checked;
-  let file = document.getElementById('foto').files[0];
-  if(n == '' || p == '' || s == '') {alert('Falta nombre, precio o stock'); return;}
-  if(file) {
-    let reader = new FileReader();
-    reader.onload = function(e) {
-      productos.push({nombre:n, precio:p, stock:s, cat:c, desc:d, promo:pr, foto:e.target.result});
-      guardar(); mostrar(); limpiar();
-    }
-    reader.readAsDataURL(file);
-  } else {
-    productos.push({nombre:n, precio:p, stock:s, cat:c, desc:d, promo:pr, foto:''});
-    guardar(); mostrar(); limpiar();
-  }
-}
-function agregarCarrito(i) {
-  carrito.push(productos[i]);
-  document.getElementById('contador').innerText = carrito.length;
-  alert(productos[i].nombre + ' agregado al carrito');
-}
-function enviarPedido() {
-  if(carrito.length == 0) {alert('Carrito vacio'); return;}
-  let msg = 'Hola! Quiero pedir:\n';
-  let total = 0;
-  for(let i=0; i<carrito.length; i++) {
-    msg += '- ' + carrito[i].nombre + ' $' + carrito[i].precio + '\n';
-    total += parseInt(carrito[i].precio);
-  }
-  msg += '\nTotal: $' + total;
-  window.open('https://wa.me/' + MI_NUMERO + '?text=' + encodeURIComponent(msg));
+function filtrar(cat) { categoriaActiva = cat; document.querySelectorAll('.filtros button').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); mostrarProductos(); }
+function agregarCarrito(i) { carrito.push(productos[i]); alert(productos[i].nombre + ' agregado al carrito ✅'); }
+function enviarWhatsApp() {
+  if(carrito.length === 0) return alert('Carrito vacío');
+  let msg = 'Hola Kiosco Polleria Lika! Quiero pedir:%0A%0A';
+  carrito.forEach(p => msg += `- ${p.nombre} $${p.precio}%0A`);
+  msg += '%0ATotal: $' + carrito.reduce((t,p)=>t+Number(p.precio),0);
+  window.open(`https://wa.me/5493483497130?text=${msg}`);
   carrito = [];
-  document.getElementById('contador').innerText = 0;
 }
-function borrar(i) {
-  if(confirm('¿Borrar ' + productos[i].nombre + '?')) {
-    productos.splice(i,1);
-    guardar(); mostrar();
-  }
+function agregarProducto() {
+  const nombre = document.getElementById('nombre').value;
+  const precio = document.getElementById('precio').value;
+  const stock = document.getElementById('stock').value;
+  const categoria = document.getElementById('categoria').value;
+  const promocion = document.getElementById('promo').checked;
+  const foto = document.getElementById('foto').files[0];
+  if(!nombre ||!precio) return alert('Completa nombre y precio');
+  const reader = new FileReader();
+  reader.onload = function(e) { productos.push({nombre, precio, stock, categoria, promocion, foto: e.target.result}); localStorage.setItem('productos', JSON.stringify(productos)); mostrarProductos(); document.getElementById('nombre').value = ''; document.getElementById('precio').value = ''; document.getElementById('stock').value = ''; }
+  if(foto) reader.readAsDataURL(foto);
+  else { productos.push({nombre, precio, stock, categoria, promocion, foto: ''}); localStorage.setItem('productos', JSON.stringify(productos)); mostrarProductos(); }
 }
-function limpiar() {
-  document.getElementById('nombre').value = '';
-  document.getElementById('precio').value = '';
-  document.getElementById('stock').value = '';
-  document.getElementById('desc').value = '';
-  document.getElementById('foto').value = '';
-  document.getElementById('promo').checked = false;
-  alert('Producto publicado!');
-}
-function mostrar() {
-  let busq = document.getElementById('buscar').value.toLowerCase();
-  let cat = document.getElementById('filtroCat').value;
-  let promos = ''; let todos = '';
-  for(let i=0; i<productos.length; i++) {
-    if(productos[i].nombre.toLowerCase().includes(busq) && (cat == '' || productos[i].cat == cat)) {
-      let img = productos[i].foto? '<img src="' + productos[i].foto + '">' : '';
-      let item = '<div class="producto ' + (productos[i].promo? 'promo' : '') + '">' + img + 
-      '<span class="categoria">' + productos[i].cat + '</span><br>' +
-      '<b>' + productos[i].nombre + '</b> - $' + productos[i].precio + 
-      '<br><span class="stock">Stock: ' + productos[i].stock + '</span>' +
-      '<br>' + productos[i].desc +
-      '<button class="btn-carrito" onclick="agregarCarrito('+i+')">🛒 Agregar</button>' +
-      '<button class="btn-wsp" onclick="window.open(\'https://wa.me/'+MI_NUMERO+'?text=Hola! Quiero '+productos[i].nombre+'\')">Pedir</button>' +
-      '<button class="btn-borrar" onclick="borrar('+i+')">🗑️</button></div>';
-      todos += item;
-      if(productos[i].promo) promos += item;
-    }
-  }
-  document.getElementById('promos').innerHTML = promos;
-  document.getElementById('todos').innerHTML = todos;
-}
+mostrarProductos();
 </script>
 </body>
 </html>
