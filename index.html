@@ -5,26 +5,137 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SUPER PI</title>
 <style>
-body{background:#0a0a0a;color:#fff;font-family:Arial;margin:0}
-.header{background:#ff416c;padding:20px;text-align:center}
-.logo{width:120px;height:120px;border-radius:50%;background:#ffd700;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:900;color:#000}
-.btn-voz{background:#25D366;color:#fff;border:none;padding:18px;border-radius:50px;font-size:18px;width:90%;margin:15px auto;display:block}
-.prod{background:#1a1a1a;margin:15px;border-radius:15px;padding:10px}
-.prod img{width:100%}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Arial',sans-serif}
+body{background:#0a0a0a;color:#fff;padding-bottom:100px}
+.header{background:linear-gradient(135deg,#ff416c,#ff4b2b);padding:20px;text-align:center}
+.logo-img{width:120px;height:120px;border-radius:50%;margin:0 auto;display:block;border:4px solid #fff;object-fit:cover;box-shadow:0 0 20px rgba(255,65,108,.5)}
+h1{font-size:36px;margin-top:10px;font-weight:900;text-shadow:2px 2px 4px rgba(0,0,0,.3)}
+.banner-promo{background:#FFD700;color:#000;padding:12px;text-align:center;font-weight:bold;font-size:16px;animation:parpadeo 1s infinite;display:none}
+@keyframes parpadeo{0%,100%{opacity:1}50%{opacity:.6}}
+.info{background:#111;padding:12px;text-align:center;font-size:14px;color:#00ff88;font-weight:bold}
+.cats{display:flex;gap:10px;padding:15px;overflow-x:auto;background:#000}
+.cat{padding:10px 22px;border:2px solid #ff416c;border-radius:25px;background:transparent;color:#ff416c;font-weight:bold;white-space:nowrap;cursor:pointer}
+.cat.active{background:linear-gradient(135deg,#ff416c,#ff4b2b);color:#fff;border:none}
+.btn-voz{background:#25D366;color:#fff;border:none;padding:18px;border-radius:50px;font-size:18px;font-weight:bold;width:90%;margin:15px auto;display:block;box-shadow:0 4px 15px rgba(37,211,102,.4);cursor:pointer}
+.grid{padding:15px;background:#0a0a0a}
+.prod{background:#1a1a1a;margin-bottom:15px;border-radius:15px;overflow:hidden;border:2px solid #ffd700;position:relative}
+.prod img{width:100%;height:200px;object-fit:cover;background:#333}
+.etiqueta-promo{position:absolute;top:10px;right:10px;background:red;color:#fff;padding:5px 10px;border-radius:8px;font-weight:bold;font-size:12px}
+.prod-info{padding:12px}
+.prod-nombre{font-size:18px;font-weight:bold;margin-bottom:5px}
+.prod-precio{color:#00ff88;font-size:20px;font-weight:bold}
+.prod-btn{background:#ff416c;color:#fff;border:none;padding:10px;width:100%;border-radius:10px;margin-top:8px;font-weight:bold;cursor:pointer}
+.btn-eliminar{background:#ff0000;color:#fff;border:none;padding:8px;width:100%;border-radius:10px;margin-top:5px;font-weight:bold;cursor:pointer;display:none}
+.admin{position:fixed;top:15px;right:15px;background:#333;color:#fff;border:none;padding:10px 15px;border-radius:10px;font-weight:bold;z-index:999;cursor:pointer}
+.carrito{position:fixed;bottom:20px;right:20px;background:#25D366;width:65px;height:65px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 4px 15px rgba(37,211,102,.4);cursor:pointer}
+.badge{position:absolute;background:red;color:#fff;border-radius:50%;width:22px;height:22px;font-size:12px;display:flex;align-items:center;justify-content:center;top:5px;right:5px}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:1000;padding:20px;overflow-y:auto}
+.modal-content{background:#1a1a1a;padding:20px;border-radius:15px;max-width:500px;margin:20px auto}
+.modal input,.modal select,textarea{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:none;background:#333;color:#fff;font-size:16px}
 </style>
 </head>
 <body>
+<button class="admin" onclick="abrirAdmin()">⚙️ Admin</button>
+
 <div class="header">
-<div class="logo">PI</div>
+<img src="https://i.imgur.com/LOGO_SUPER_PI.png" class="logo-img" alt="SUPER PI">
 <h1>SUPER PI</h1>
 </div>
-<div style="background:#111;padding:10px;text-align:center;color:#00ff88">⏰ 9:00 a 22:00hs | 🚚 Envío Gratis $10000</div>
-<button class="btn-voz">🎤 HACE TU PEDIDO HABLANDO</button>
-<div class="prod">
-<img src="https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=500">
-<h3>Pollo entero</h3>
-<h2 style="color:#00ff88">$8500</h2>
-<button style="background:#ff416c;color:#fff;border:none;padding:10px;width:100%;border-radius:10px">Agregar</button>
+
+<div class="banner-promo" id="bannerPromo"></div>
+
+<div class="info">
+<span>⏰ Horario: 9:00 a 22:00hs</span> |
+<span>🚚 Envío Gratis desde $10000</span> |
+<span>📍 Calchaquí</span>
 </div>
-</body>
-</html>
+
+<button class="btn-voz" id="btnVoz" onclick="hablar()">🎤 HACE TU PEDIDO HABLANDO</button>
+
+<div class="cats">
+<button class="cat active" onclick="filtrar('Todas',this)">Todas</button>
+<button class="cat" onclick="filtrar('Polleria',this)">Polleria</button>
+<button class="cat" onclick="filtrar('Bebidas',this)">Bebidas</button>
+<button class="cat" onclick="filtrar('Kiosco',this)">Kiosco</button>
+</div>
+
+<div class="grid" id="productos"></div>
+
+<div class="carrito" onclick="verCarrito()">🛒<div class="badge" id="badge">0</div></div>
+
+<!-- MODAL ADMIN -->
+<div class="modal" id="modalAdmin">
+<div class="modal-content">
+<h2>⚙️ Panel Admin</h2>
+<input type="password" id="clave" placeholder="Clave: Admin">
+<div id="panel" style="display:none">
+<h3>1. Agregar Producto</h3>
+<input id="nom" placeholder="Nombre">
+<input id="pre" type="number" placeholder="Precio">
+<input id="preAnt" type="number" placeholder="Precio anterior">
+<select id="cat"><option>Polleria</option><option>Bebidas</option><option>Kiosco</option></select>
+<input id="img" placeholder="URL de imagen">
+<label><input type="checkbox" id="esPromo"> Es PROMOCIÓN</label>
+<button onclick="agregarProd()" style="background:#25D366;color:#fff;width:100%">Agregar</button>
+<hr>
+<h3>2. Banner Promoción</h3>
+<textarea id="textoPromo" placeholder="2X1 EN POLLOS"></textarea>
+<button onclick="publicarPromo()" style="background:#FFD700;color:#000;width:100%">Publicar</button>
+<hr>
+<h3>3. Eliminar Productos</h3>
+<div id="listaEliminar"></div>
+</div>
+<button onclick="entrar()" style="background:#ff416c;color:#fff">Entrar</button>
+<button onclick="cerrarAdmin()" style="background:#555;color:#fff">Cerrar</button>
+</div>
+</div>
+
+<!-- MODAL CARRITO -->
+<div class="modal" id="modalCarrito">
+<div class="modal-content">
+<h2>🛒 Tu Pedido</h2>
+<div id="listaCarrito"></div>
+<h3 id="totalCarrito"></h3>
+<button onclick="enviarWhatsApp()" style="background:#25D366;color:#fff;width:100%">Enviar por WhatsApp</button>
+<button onclick="cerrarCarrito()" style="background:#555;color:#fff;width:100%;margin-top:10px">Cerrar</button>
+</div>
+</div>
+
+<script>
+let productos = JSON.parse(localStorage.getItem('prods')) || [
+{n:"Pollo entero",p:8500,pAnt:10000,c:"Polleria",i:"https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=500",promo:true},
+{n:"Coca 2.25L",p:2500,pAnt:0,c:"Bebidas",i:"https://images.unsplash.com/photo-1554866585-ba0f69624584?w=500",promo:false}
+];
+let carrito = [];
+let promoTexto = localStorage.getItem('promo') || "";
+
+function mostrar(){
+if(promoTexto){document.getElementById('bannerPromo').style.display="block";document.getElementById('bannerPromo').innerText="🔥 "+promoTexto+" 🔥"}
+let html=""; let modoAdmin = document.getElementById('panel').style.display=="block";
+productos.forEach((p,i)=>{
+html+=`<div class="prod">
+${p.promo?'<div class="etiqueta-promo">PROMO</div>':''}
+<img src="${p.i}">
+<div class="prod-info">
+<div class="prod-nombre">${p.n}</div>
+<div class="prod-precio">${p.promo&&p.pAnt?`<span style="text-decoration:line-through;color:#888">$${p.pAnt}</span> `:''}$${p.p}</div>
+<button class="prod-btn" onclick="agregarCarrito(${i})">Agregar al carrito</button>
+<button class="btn-eliminar" onclick="eliminarProd(${i})">🗑️ Eliminar</button>
+</div></div>`
+});
+document.getElementById('productos').innerHTML=html;
+if(modoAdmin) document.querySelectorAll('.btn-eliminar').forEach(b=>b.style.display="block");
+}
+mostrar();
+
+function agregarCarrito(i){carrito.push(productos[i]);document.getElementById('badge').innerText=carrito.length;alert("✅ "+productos[i].n+" agregado!")}
+function verCarrito(){let html="";let total=0;carrito.forEach((p,i)=>{html+=`<p>${p.n} - $${p.p}</p>`;total+=p.p});document.getElementById('listaCarrito').innerHTML=html||"<p>Vacío</p>";document.getElementById('totalCarrito').innerText="Total: $"+total;document.getElementById('modalCarrito').style.display="block"}
+function cerrarCarrito(){document.getElementById('modalCarrito').style.display="none"}
+function enviarWhatsApp(){let total=carrito.reduce((a,b)=>a+b.p,0);let msg="Hola *SUPER PI* Quiero pedir:%0A";carrito.forEach(p=>msg+=`• ${p.n} $${p.p}%0A`);msg+=`%0ATotal: $${total}`;window.open(`https://wa.me/549TU-NUMERO?text=${msg}`)}
+
+function abrirAdmin(){document.getElementById('modalAdmin').style.display="block";cargarListaEliminar()}
+function cerrarAdmin(){document.getElementById('modalAdmin').style.display="none";mostrar()}
+function entrar(){if(document.getElementById('clave').value=="Admin"){document.getElementById('panel').style.display="block";mostrar()}else alert("Clave incorrecta")}
+function agregarProd(){productos.push({n:nom.value,p:parseInt(pre.value),pAnt:parseInt(preAnt.value)||0,c:cat.value,i:img.value,promo:esPromo.checked});localStorage.setItem('prods',JSON.stringify(productos));mostrar();alert("Agregado!");cargarListaEliminar()}
+function eliminarProd(i){if(confirm("¿Eliminar?")){productos.splice(i,1);localStorage.setItem('prods',JSON.stringify(productos));mostrar();cargarListaEliminar()}}
+function cargarListaEliminar(){let html="";productos.forEach((p,i)=>html+=`<button onclick="eliminarProd(${i})" style="background:#f00;color:#fff;padding:8px;margin:3px;border
