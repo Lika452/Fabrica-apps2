@@ -15,12 +15,13 @@ body{background:#0f0f0f;color:#fff;font-family:'Arial';margin:0;padding:0;paddin
 .container{padding:15px;max-width:700px;margin:auto}
 .btn-cat{background:#1f1f1f;color:#ff416c;border:2px solid #ff416c;padding:10px 18px;border-radius:25px;cursor:pointer;font-weight:bold;margin:5px}
 .btn-cat.active{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none}
-.producto{background:#1a1a1a;border:1px solid #333;border-radius:15px;padding:12px;margin:12px 0}
+.producto{background:#1a1a1a;border:1px solid #333;border-radius:15px;padding:12px;margin:12px 0;position:relative}
 .producto.promo{border:2px solid #ffd700;animation:brillo 2s infinite}
 @keyframes brillo{0%,100%{box-shadow:0 0 20px rgba(255,215,0,0.4)}50%{box-shadow:0 0 30px rgba(255,215,0,0.8)}}
 .img-prod{width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:10px;background:#2a2a2a}
 .precio{color:#00ff88;font-size:22px;font-weight:bold}
 .btn-add{background:#ff416c;color:#fff;border:none;padding:10px;border-radius:10px;width:100%;margin-top:8px;cursor:pointer;font-weight:bold}
+.btn-borrar-prod{position:absolute;top:10px;right:10px;background:#ff0000;color:#fff;border:none;padding:5px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:bold}
 .form{background:#1a1a1a;padding:20px;border-radius:15px;margin-top:20px;border:1px solid #333}
 input{background:#2a2a2a;color:#fff;border:1px solid #444;padding:12px;border-radius:10px;width:100%;margin:8px 0}
 input[type=file]{padding:8px}
@@ -32,6 +33,7 @@ input[type=file]{padding:8px}
 .item-carrito{display:flex;justify-content:space-between;align-items:center;margin:12px 0;padding:10px;background:#222;border-radius:10px}
 .btn-borrar{background:#ff416c;color:#fff;border:none;padding:5px 10px;border-radius:8px;cursor:pointer;font-size:12px}
 .preview{width:100%;height:150px;object-fit:cover;border-radius:10px;margin:8px 0;display:none;border:2px dashed #ff416c}
+.login-box{background:#1a1a1a;padding:30px;border-radius:15px;text-align:center;margin:50px auto;max-width:400px;border:2px solid #ff416c}
 </style>
 </head>
 <body>
@@ -41,11 +43,19 @@ input[type=file]{padding:8px}
 </div>
 
 <div class="container">
+<div id="login" class="login-box">
+<h2>🔒 Acceso Admin</h2>
+<p style="color:#aaa;font-size:14px">Solo para el dueño</p>
+<input id="clave" type="password" placeholder="Ingresa la clave">
+<button class="btn-pub" onclick="entrar()">Entrar</button>
+</div>
+
+<div id="tienda" style="display:none">
 <div id="categorias"></div>
 <div id="productos"></div>
 
 <div class="form">
-<h2>➕ Agregar Producto</h2>
+<h2>➕ Panel Admin</h2>
 <input id="nombre" placeholder="Nombre del producto">
 <input id="precio" type="number" placeholder="Precio $">
 <input id="stock" type="number" placeholder="Stock">
@@ -59,120 +69,8 @@ input[type=file]{padding:8px}
 <button class="btn-pub" onclick="agregar()">Publicar producto</button>
 </div>
 </div>
+</div>
 
 <div class="carrito-btn" onclick="abrirCarrito()">🛒<div class="carrito-contador" id="contador">0</div></div>
 
-<div class="modal" id="modalCarrito">
-<div class="modal-content">
-<button class="btn-cerrar" onclick="cerrarCarrito()">X</button>
-<h2>🛒 Tu Pedido</h2>
-<div id="listaCarrito"></div>
-<input id="nombreCliente" placeholder="Tu nombre">
-<input id="dirCliente" placeholder="Tu dirección">
-<button class="btn-enviar" onclick="enviarPedido()">Enviar pedido por WhatsApp</button>
-</div>
-</div>
-
-<script>
-let productos=JSON.parse(localStorage.getItem('productos'))||[];
-let carrito=JSON.parse(localStorage.getItem('carrito'))||[];
-let catActiva='Todas';
-let fotoBase64='';
-let logoBase64='';
-const categorias=['Todas','Polleria','Bebidas','Kiosco'];
-const MI_NUMERO='5493483497130';
-
-function previsualizar(e){
-const file=e.target.files[0];
-const reader=new FileReader();
-reader.onload=function(event){
-fotoBase64=event.target.result;
-document.getElementById('previewFoto').src=fotoBase64;
-document.getElementById('previewFoto').style.display='block';
-}
-reader.readAsDataURL(file);
-}
-
-function cambiarLogo(e){
-const file=e.target.files[0];
-const reader=new FileReader();
-reader.onload=function(event){
-logoBase64=event.target.result;
-document.getElementById('logoTienda').src=logoBase64;
-}
-reader.readAsDataURL(file);
-}
-
-function mostrar(){
-document.getElementById('categorias').innerHTML=categorias.map(c=>`<button class="btn-cat ${catActiva==c?'active':''}" onclick="filtrar('${c}')">${c}</button>`).join('');
-let lista=catActiva=='Todas'?productos:productos.filter(p=>p.categoria==catActiva);
-document.getElementById('productos').innerHTML=lista.map(p=>`
-<div class="producto ${p.promo?'promo':''}">
-<img src="${p.foto||'https://via.placeholder.com/300x180/2a2a2a/fff?text=Sin+Foto'}" class="img-prod">
-<h3>${p.nombre}</h3>
-<div class="precio">$${p.precio}</div>
-<div style="color:#aaa;font-size:12px">Stock: ${p.stock}</div>
-${p.promo?'<div style="color:#ffd700">🔥 EN PROMO</div>':''}
-<button class="btn-add" onclick="addCarrito('${p.nombre}',${p.precio})">Agregar al carrito</button>
-</div>
-`).join('');
-document.getElementById('contador').innerText=carrito.reduce((a,b)=>a+b.cant,0);
-}
-
-function filtrar(c){catActiva=c;mostrar()}
-
-function agregar(){
-let n=document.getElementById('nombre').value;
-let pr=document.getElementById('precio').value;
-if(!n||!pr)return alert('Completa nombre y precio');
-productos.push({
-nombre:n,precio:pr,stock:document.getElementById('stock').value,
-categoria:document.getElementById('categoria').value,
-foto:fotoBase64,promo:document.getElementById('promo').checked
-});
-localStorage.setItem('productos',JSON.stringify(productos));
-document.querySelectorAll('#nombre,#precio,#stock').forEach(i=>i.value='');
-document.getElementById('previewFoto').style.display='none';
-fotoBase64='';
-mostrar();
-}
-
-function addCarrito(n,p){
-let item=carrito.find(x=>x.nombre==n);
-if(item)item.cant++; else carrito.push({nombre:n,precio:p,cant:1});
-localStorage.setItem('carrito',JSON.stringify(carrito));
-mostrar();
-}
-
-function borrarCarrito(n){
-carrito=carrito.filter(x=>x.nombre!=n);
-localStorage.setItem('carrito',JSON.stringify(carrito));
-abrirCarrito();mostrar();
-}
-
-function abrirCarrito(){
-document.getElementById('modalCarrito').style.display='block';
-document.getElementById('listaCarrito').innerHTML=carrito.length?carrito.map(i=>`
-<div class="item-carrito">
-<span>${i.nombre} x${i.cant} = $${i.precio*i.cant}</span>
-<button class="btn-borrar" onclick="borrarCarrito('${i.nombre}')">Borrar</button>
-</div>`).join('')+'<hr><b>Total: $'+carrito.reduce((a,b)=>a+b.precio*b.cant,0)+'</b>':'<p>Carrito vacío</p>';
-}
-
-function cerrarCarrito(){document.getElementById('modalCarrito').style.display='none'}
-
-function enviarPedido(){
-let nom=document.getElementById('nombreCliente').value;
-let dir=document.getElementById('dirCliente').value;
-if(!nom||!dir)return alert('Completa tus datos');
-let texto=`*NUEVO PEDIDO LIKA*%0A%0ACliente: ${nom}%0ADirección: ${dir}%0A%0A*PRODUCTOS:*%0A`;
-carrito.forEach(i=>texto+=`- ${i.nombre} x${i.cant} = $${i.precio*i.cant}%0A`);
-texto+=`%0A*TOTAL: $${carrito.reduce((a,b)=>a+b.precio*b.cant,0)}*`;
-window.open(`https://wa.me/${MI_NUMERO}?text=${texto}`);
-carrito=[];localStorage.setItem('carrito','[]');cerrarCarrito();mostrar();
-}
-
-mostrar();
-</script>
-</body>
-</html>
+<div class="modal" id="
