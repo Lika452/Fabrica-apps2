@@ -1,27 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Super Pi</title>
-<style>
-body{background:#0f0f0f;color:#fff;font-family:Arial;margin:0;padding:20px}
-.header{text-align:center;background:linear-gradient(90deg,#ff4b2b,#ff416c);padding:15px;border-radius:15px}
-.logo{width:90px;height:90px;border-radius:50%;border:3px solid #fff}
-.btn-voz{background:#25D366;color:#fff;border:none;padding:15px;border-radius:50px;width:100%;font-size:16px;font-weight:bold;margin:20px 0}
-.info{padding:10px;text-align:center;background:#1a1a1a;border-radius:10px;margin:10px 0}
-.btn-admin{position:fixed;top:10px;right:10px;background:#333;color:#fff;border:none;padding:8px;border-radius:8px}
-</style>
+<style>body{background:#000;color:#fff;font-family:Arial;text-align:center;padding:20px}
+.btn{background:#25D366;color:#fff;border:none;padding:15px 30px;border-radius:50px;font-size:18px;font-weight:bold;margin:20px}</style>
 </head>
 <body>
-<button class="btn-admin" onclick="alert('Clave: Admin')">⚙️ Admin</button>
-<div class="header">
-<img src="https://i.imgur.com/8K3mZQp.png" class="logo">
-<h1>SUPER PI</h1>
-</div>
-<div class="info">🕒 9:00 a 22:00hs | 🚚 Envío Gratis +$10000 | 📍 Calchaquí</div>
-<button class="btn-voz" onclick="alert('Toca y habla')">🎤 HACE TU PEDIDO HABLANDO</button>
-<h3>Productos</h3>
-<div id="productos">Carga productos desde Admin</div>
+<h1 style="color:#ff416c">SUPER PI 🐔</h1>
+<p>🕒 9:00 a 22:00hs | 🚚 Envío Gratis +$10000 | 📍 Calchaquí</p>
+<button class="btn" onclick="alert('Toca y habla')">🎤 HACE TU PEDIDO HABLANDO</button>
+<p>Productos: Cargar desde Admin</p>
+<button onclick="alert('Clave: Admin')" style="position:fixed;top:10px;right:10px">⚙️ Admin</button>
 </body>
 </html>
