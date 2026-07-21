@@ -6,34 +6,36 @@
 <title>Kiosco Polleria Lika</title>
 <style>
 *{box-sizing:border-box}
-body{background:#0f0f0f;color:#fff;font-family:'Arial';margin:0;padding:0}
-.header{background:linear-gradient(90deg,#ff4b2b,#ff416c);padding:25px 15px;text-align:center;position:sticky;top:0;z-index:10;box-shadow:0 4px 15px rgba(255,65,108,0.4)}
-.header h1{margin:0;font-size:26px;letter-spacing:1px}
-.header p{margin:5px 0 0 0;opacity:0.9;font-size:14px}
+body{background:#0f0f0f;color:#fff;font-family:'Arial';margin:0;padding:0;padding-bottom:80px}
+.header{background:linear-gradient(90deg,#ff4b2b,#ff416c);padding:25px 15px;text-align:center;position:sticky;top:0;z-index:10}
+.header h1{margin:0;font-size:26px}
+.carrito-btn{position:fixed;bottom:20px;right:20px;background:#25D366;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;box-shadow:0 4px 20px rgba(37,211,102,0.5);z-index:20}
+.carrito-contador{position:absolute;top:-5px;right:-5px;background:#ff416c;color:#fff;border-radius:50%;width:24px;height:24px;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:bold}
 .container{padding:15px;max-width:700px;margin:auto}
-.cats{display:flex;gap:8px;overflow-x:auto;padding:10px 0;margin-bottom:15px}
-.btn-cat{background:#1f1f1f;color:#ff416c;border:2px solid #ff416c;padding:10px 18px;border-radius:25px;cursor:pointer;font-weight:bold;white-space:nowrap;transition:0.3s}
-.btn-cat.active{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none;transform:scale(1.05)}
-.producto{background:#1a1a1a;border:1px solid #333;border-radius:15px;padding:15px;margin:12px 0;box-shadow:0 4px 10px rgba(0,0,0,0.5);transition:0.3s}
-.producto:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(255,65,108,0.3)}
-.producto.promo{border:2px solid #ffd700;box-shadow:0 0 20px rgba(255,215,0,0.4);animation:brillo 2s infinite}
+.cats{display:flex;gap:8px;overflow-x:auto;padding:10px 0}
+.btn-cat{background:#1f1f1f;color:#ff416c;border:2px solid #ff416c;padding:10px 18px;border-radius:25px;cursor:pointer;font-weight:bold;white-space:nowrap}
+.btn-cat.active{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none}
+.producto{background:#1a1a1a;border:1px solid #333;border-radius:15px;padding:12px;margin:12px 0}
+.producto.promo{border:2px solid #ffd700;animation:brillo 2s infinite}
 @keyframes brillo{0%,100%{box-shadow:0 0 20px rgba(255,215,0,0.4)}50%{box-shadow:0 0 30px rgba(255,215,0,0.8)}}
-.producto h3{margin:0 0 8px 0;color:#ff416c;font-size:18px}
+.img-prod{width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:10px;background:#2a2a2a}
+.producto h3{margin:0 0 5px 0;color:#ff416c}
 .precio{color:#00ff88;font-size:22px;font-weight:bold}
-.stock{color:#aaa;font-size:12px;margin-top:5px}
-.btn-wsp{background:#25D366;color:#fff;border:none;padding:14px;border-radius:12px;width:100%;font-size:16px;cursor:pointer;font-weight:bold;margin-top:20px}
+.btn-add{background:#ff416c;color:#fff;border:none;padding:10px;border-radius:10px;width:100%;margin-top:8px;cursor:pointer;font-weight:bold}
 .form{background:#1a1a1a;padding:20px;border-radius:15px;margin-top:20px;border:1px solid #333}
-input,select{background:#2a2a2a;color:#fff;border:1px solid #444;padding:12px;border-radius:10px;width:100%;margin:8px 0;font-size:15px}
-label{display:flex;align-items:center;gap:8px;margin:10px 0}
-.btn-pub{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none;padding:14px;border-radius:12px;width:100%;font-size:16px;cursor:pointer;font-weight:bold;margin-top:10px;transition:0.3s}
-.btn-pub:hover{opacity:0.9;transform:scale(1.02)}
+input{background:#2a2a2a;color:#fff;border:1px solid #444;padding:12px;border-radius:10px;width:100%;margin:8px 0}
+.btn-pub{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none;padding:14px;border-radius:12px;width:100%;font-weight:bold;cursor:pointer}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:30;overflow-y:auto}
+.modal-content{background:#1a1a1a;margin:50px auto;padding:20px;border-radius:15px;max-width:500px}
+.btn-cerrar{float:right;background:none;border:none;color:#fff;font-size:24px;cursor:pointer}
+.btn-enviar{background:#25D366;color:#fff;border:none;padding:14px;border-radius:12px;width:100%;font-weight:bold;margin-top:10px;cursor:pointer}
 </style>
 </head>
 <body>
 <div class="header">
 <h1>🏬 Kiosco Polleria Lika</h1>
-<p>Kiosco • Bebidas • Pollos</p>
 </div>
+
 <div class="container">
 <div class="cats" id="categorias"></div>
 <div id="productos"></div>
@@ -43,36 +45,47 @@ label{display:flex;align-items:center;gap:8px;margin:10px 0}
 <input id="nombre" placeholder="Nombre del producto">
 <input id="precio" type="number" placeholder="Precio $">
 <input id="stock" type="number" placeholder="Stock">
-<select id="categoria">
-<option value="Polleria">🍗 Polleria</option>
-<option value="Bebidas">🥤 Bebidas</option>
-<option value="Kiosco">🍫 Kiosco</option>
-</select>
-<label><input type="checkbox" id="promo"> <span>🔥 En promoción</span></label>
+<input id="foto" placeholder="URL de la foto del producto">
+<select id="categoria"><option>Polleria</option><option>Bebidas</option><option>Kiosco</option></select>
+<label><input type="checkbox" id="promo"> 🔥 En promoción</label>
 <button class="btn-pub" onclick="agregar()">Publicar producto</button>
 </div>
+</div>
 
-<button class="btn-wsp" onclick="window.open('https://wa.me/549')">📱 Consultar por WhatsApp</button>
+<div class="carrito-btn" onclick="abrirCarrito()">🛒<div class="carrito-contador" id="contador">0</div></div>
+
+<div class="modal" id="modalCarrito">
+<div class="modal-content">
+<button class="btn-cerrar" onclick="cerrarCarrito()">X</button>
+<h2>🛒 Tu Pedido</h2>
+<div id="listaCarrito"></div>
+<input id="nombreCliente" placeholder="Tu nombre">
+<input id="dirCliente" placeholder="Tu dirección">
+<button class="btn-enviar" onclick="enviarPedido()">Enviar pedido por WhatsApp</button>
+</div>
 </div>
 
 <script>
 let productos=JSON.parse(localStorage.getItem('productos'))||[];
+let carrito=JSON.parse(localStorage.getItem('carrito'))||[];
 let catActiva='Todas';
 const categorias=['Todas','Polleria','Bebidas','Kiosco'];
+const MI_NUMERO='5493483497130'; // <-- YA ESTA TU NUMERO
 
 function mostrar(){
-document.getElementById('categorias').innerHTML=categorias.map(c=>
-`<button class="btn-cat ${catActiva==c?'active':''}" onclick="filtrar('${c}')">${c}</button>`
-).join('');
+document.getElementById('categorias').innerHTML=categorias.map(c=>`<button class="btn-cat ${catActiva==c?'active':''}" onclick="filtrar('${c}')">${c}</button>`).join('');
 let lista=catActiva=='Todas'?productos:productos.filter(p=>p.categoria==catActiva);
-document.getElementById('productos').innerHTML=lista.length?lista.map((p,i)=>`
+document.getElementById('productos').innerHTML=lista.map(p=>`
 <div class="producto ${p.promo?'promo':''}">
+<img src="${p.foto||'https://via.placeholder.com/300x180/2a2a2a/fff?text=Sin+Foto'}" class="img-prod">
 <h3>${p.nombre}</h3>
 <div class="precio">$${p.precio}</div>
-<div class="stock">Stock: ${p.stock}</div>
-${p.promo?'<div style="color:#ffd700;margin-top:5px;font-weight:bold">🔥 EN PROMO</div>':''}
+<div style="color:#aaa;font-size:12px">Stock: ${p.stock}</div>
+${p.promo?'<div style="color:#ffd700">🔥 EN PROMO</div>':''}
+<button class="btn-add" onclick="addCarrito('${p.nombre}',${p.precio})">Agregar al carrito</button>
 </div>
-`).join(''):'<p style="text-align:center;opacity:0.6;padding:20px">No hay productos. Agrega uno abajo</p>';
+`).join('');
+document.getElementById('contador').innerText=carrito.reduce((a,b)=>a+b.cant,0);
 }
 
 function filtrar(c){catActiva=c;mostrar()}
@@ -80,18 +93,45 @@ function filtrar(c){catActiva=c;mostrar()}
 function agregar(){
 let n=document.getElementById('nombre').value;
 let pr=document.getElementById('precio').value;
-let st=document.getElementById('stock').value;
-let ca=document.getElementById('categoria').value;
-let pm=document.getElementById('promo').checked;
-if(!n||!pr){alert('Completa nombre y precio');return}
-productos.push({nombre:n,precio:pr,stock:st,categoria:ca,promo:pm});
+if(!n||!pr)return alert('Completa nombre y precio');
+productos.push({
+nombre:n,precio:pr,stock:document.getElementById('stock').value,
+categoria:document.getElementById('categoria').value,
+foto:document.getElementById('foto').value,promo:document.getElementById('promo').checked
+});
 localStorage.setItem('productos',JSON.stringify(productos));
-document.getElementById('nombre').value='';
-document.getElementById('precio').value='';
-document.getElementById('stock').value='';
-document.getElementById('promo').checked=false;
+document.querySelectorAll('#nombre,#precio,#stock,#foto').forEach(i=>i.value='');
 mostrar();
 }
+
+function addCarrito(n,p){
+let item=carrito.find(x=>x.nombre==n);
+if(item)item.cant++; else carrito.push({nombre:n,precio:p,cant:1});
+localStorage.setItem('carrito',JSON.stringify(carrito));
+mostrar();
+}
+
+function abrirCarrito(){
+document.getElementById('modalCarrito').style.display='block';
+document.getElementById('listaCarrito').innerHTML=carrito.length?carrito.map(i=>`
+<div style="display:flex;justify-content:space-between;margin:10px 0">
+<span>${i.nombre} x${i.cant}</span><span>$${i.precio*i.cant}</span>
+</div>`).join('')+'<hr><b>Total: $'+carrito.reduce((a,b)=>a+b.precio*b.cant,0)+'</b>':'<p>Carrito vacío</p>';
+}
+
+function cerrarCarrito(){document.getElementById('modalCarrito').style.display='none'}
+
+function enviarPedido(){
+let nom=document.getElementById('nombreCliente').value;
+let dir=document.getElementById('dirCliente').value;
+if(!nom||!dir)return alert('Completa tus datos');
+let texto=`*NUEVO PEDIDO LIKA*%0A%0ACliente: ${nom}%0ADirección: ${dir}%0A%0A*PRODUCTOS:*%0A`;
+carrito.forEach(i=>texto+=`- ${i.nombre} x${i.cant} = $${i.precio*i.cant}%0A`);
+texto+=`%0A*TOTAL: $${carrito.reduce((a,b)=>a+b.precio*b.cant,0)}*`;
+window.open(`https://wa.me/${MI_NUMERO}?text=${texto}`);
+carrito=[];localStorage.setItem('carrito','[]');cerrarCarrito();mostrar();
+}
+
 mostrar();
 </script>
 </body>
