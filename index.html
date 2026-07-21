@@ -3,28 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kiosco Polleria Lika</title>
+<title>Super Pi</title>
 <style>
 *{box-sizing:border-box}
-body{background:#0f0f0f;color:#fff;font-family:'Arial';margin:0;padding:0;padding-bottom:80px}
-.header{background:linear-gradient(90deg,#ff4b2b,#ff416c);padding:15px;text-align:center;position:sticky;top:0;z-index:10}
-.logo{width:80px;height:80px;border-radius:50%;border:3px solid #fff;margin-bottom:8px;object-fit:cover;background:#2a2a2a}
-.header h1{margin:5px 0;font-size:24px}
-.carrito-btn{position:fixed;bottom:20px;right:20px;background:#25D366;width:65px;height:65px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;box-shadow:0 4px 20px rgba(37,211,102,0.6);z-index:20}
+body{background:#0f0f0f;color:#fff;font-family:Arial;margin:0;padding:0 0 80px 0}
+.header{background:linear-gradient(90deg,#ff4b2b,#ff416c);padding:15px;text-align:center;position:sticky;top:0}
+.logo{width:90px;height:90px;border-radius:50%;border:3px solid #fff;margin-bottom:8px;object-fit:cover}
+.header h1{margin:5px 0;font-size:26px;font-weight:900}
+.carrito-btn{position:fixed;bottom:20px;right:20px;background:#25D366;width:65px;height:65px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;z-index:20}
 .carrito-contador{position:absolute;top:-5px;right:-5px;background:#ff416c;color:#fff;border-radius:50%;width:26px;height:26px;font-size:13px;display:flex;align-items:center;justify-content:center;font-weight:bold}
 .container{padding:15px;max-width:700px;margin:auto}
 .btn-cat{background:#1f1f1f;color:#ff416c;border:2px solid #ff416c;padding:10px 18px;border-radius:25px;cursor:pointer;font-weight:bold;margin:5px}
 .btn-cat.active{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none}
 .producto{background:#1a1a1a;border:1px solid #333;border-radius:15px;padding:12px;margin:12px 0;position:relative}
-.producto.promo{border:2px solid #ffd700;animation:brillo 2s infinite}
-@keyframes brillo{0%,100%{box-shadow:0 0 20px rgba(255,215,0,0.4)}50%{box-shadow:0 0 30px rgba(255,215,0,0.8)}}
-.img-prod{width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:10px;background:#2a2a2a}
+.producto.promo{border:2px solid #ffd700}
+.img-prod{width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:10px}
 .precio{color:#00ff88;font-size:22px;font-weight:bold}
 .btn-add{background:#ff416c;color:#fff;border:none;padding:10px;border-radius:10px;width:100%;margin-top:8px;cursor:pointer;font-weight:bold}
 .btn-borrar-prod{position:absolute;top:10px;right:10px;background:#ff0000;color:#fff;border:none;padding:5px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:bold}
 .form{background:#1a1a1a;padding:20px;border-radius:15px;margin-top:20px;border:1px solid #333}
 input{background:#2a2a2a;color:#fff;border:1px solid #444;padding:12px;border-radius:10px;width:100%;margin:8px 0}
-input[type=file]{padding:8px}
 .btn-pub{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none;padding:14px;border-radius:12px;width:100%;font-weight:bold;cursor:pointer;margin-top:8px}
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:30;overflow-y:auto}
 .modal-content{background:#1a1a1a;margin:50px auto;padding:20px;border-radius:15px;max-width:500px}
@@ -38,39 +36,31 @@ input[type=file]{padding:8px}
 </head>
 <body>
 <div class="header">
-<img src="https://via.placeholder.com/80/ff416c/fff?text=L" class="logo" id="logoTienda">
-<h1>Kiosco Polleria Lika</h1>
+<img src="https://i.imgur.com/8K3mZQp.png" class="logo" id="logoTienda">
+<h1>SUPER PI</h1>
 </div>
-
 <div class="container">
-<div id="login" class="login-box">
-<h2>🔒 Acceso Admin</h2>
-<p style="color:#aaa;font-size:14px">Solo para el dueño</p>
-<input id="clave" type="password" placeholder="Ingresa la clave">
-<button class="btn-pub" onclick="entrar()">Entrar</button>
-</div>
-
-<div id="tienda" style="display:none">
-<div id="categorias"></div>
-<div id="productos"></div>
-
-<div class="form">
-<h2>➕ Panel Admin</h2>
-<input id="nombre" placeholder="Nombre del producto">
-<input id="precio" type="number" placeholder="Precio $">
-<input id="stock" type="number" placeholder="Stock">
-<label style="font-size:14px">📸 Foto del producto:</label>
-<input id="fotoFile" type="file" accept="image/*" onchange="previsualizar(event)">
-<img id="previewFoto" class="preview">
-<label style="font-size:14px">🏬 Logo de la tienda:</label>
-<input id="logoFile" type="file" accept="image/*" onchange="cambiarLogo(event)">
-<select id="categoria"><option>Polleria</option><option>Bebidas</option><option>Kiosco</option></select>
-<label><input type="checkbox" id="promo"> 🔥 En promoción</label>
-<button class="btn-pub" onclick="agregar()">Publicar producto</button>
-</div>
-</div>
-</div>
-
+<div id="login" class="login-box"><h2>🔒 Acceso Admin</h2><input id="clave" type="password" placeholder="Ingresa la clave"><button class="btn-pub" onclick="entrar()">Entrar</button></div>
+<div id="tienda" style="display:none"><div id="categorias"></div><div id="productos"></div>
+<div class="form"><h2>➕ Panel Admin</h2><input id="nombre" placeholder="Nombre del producto"><input id="precio" type="number" placeholder="Precio $"><input id="stock" type="number" placeholder="Stock"><input id="fotoFile" type="file" accept="image/*" onchange="previsualizar(event)"><img id="previewFoto" class="preview"><input id="logoFile" type="file" accept="image/*" onchange="cambiarLogo(event)"><select id="categoria"><option>Polleria</option><option>Bebidas</option><option>Kiosco</option></select><label><input type="checkbox" id="promo"> 🔥 En promoción</label><button class="btn-pub" onclick="agregar()">Publicar</button></div></div></div>
 <div class="carrito-btn" onclick="abrirCarrito()">🛒<div class="carrito-contador" id="contador">0</div></div>
-
-<div class="modal" id="
+<div class="modal" id="modalCarrito"><div class="modal-content"><button class="btn-cerrar" onclick="cerrarCarrito()">X</button><h2>🛒 Tu Pedido</h2><div id="listaCarrito"></div><input id="nombreCliente" placeholder="Tu nombre"><input id="dirCliente" placeholder="Tu dirección"><button class="btn-enviar" onclick="enviarPedido()">Enviar por WhatsApp</button></div></div>
+<script>
+const CLAVE_ADMIN="Admin";let productos=JSON.parse(localStorage.getItem('productos'))||[];let carrito=JSON.parse(localStorage.getItem('carrito'))||[];let catActiva='Todas';let fotoBase64='';let logoBase64=localStorage.getItem('logoLika')||'https://i.imgur.com/8K3mZQp.png';const categorias=['Todas','Polleria','Bebidas','Kiosco'];const MI_NUMERO='5493483497130';document.getElementById('logoTienda').src=logoBase64;
+if(sessionStorage.getItem('admin')=='true'){document.getElementById('login').style.display='none';document.getElementById('tienda').style.display='block';}
+function entrar(){if(document.getElementById('clave').value==CLAVE_ADMIN){sessionStorage.setItem('admin','true');document.getElementById('login').style.display='none';document.getElementById('tienda').style.display='block';}else{alert('Clave incorrecta')}}
+function previsualizar(e){const file=e.target.files[0];const reader=new FileReader();reader.onload=function(event){fotoBase64=event.target.result;document.getElementById('previewFoto').src=fotoBase64;document.getElementById('previewFoto').style.display='block'};reader.readAsDataURL(file);}
+function cambiarLogo(e){const file=e.target.files[0];const reader=new FileReader();reader.onload=function(event){logoBase64=event.target.result;localStorage.setItem('logoLika',logoBase64);document.getElementById('logoTienda').src=logoBase64};reader.readAsDataURL(file);}
+function mostrar(){document.getElementById('categorias').innerHTML=categorias.map(c=>`<button class="btn-cat ${catActiva==c?'active':''}" onclick="filtrar('${c}')">${c}</button>`).join('');let lista=catActiva=='Todas'?productos:productos.filter(p=>p.categoria==catActiva);let esAdmin=sessionStorage.getItem('admin')=='true';document.getElementById('productos').innerHTML=lista.map((p,i)=>`<div class="producto ${p.promo?'promo':''}">${esAdmin?`<button class="btn-borrar-prod" onclick="borrarProducto(${i})">X</button>`:''}<img src="${p.foto||'https://via.placeholder.com/300x180'}" class="img-prod"><h3>${p.nombre}</h3><div class="precio">$${p.precio}</div><div style="color:#aaa;font-size:12px">Stock: ${p.stock}</div>${p.promo?'<div style="color:#ffd700">🔥 EN PROMO</div>':''}<button class="btn-add" onclick="addCarrito('${p.nombre}',${p.precio})">Agregar</button></div>`).join('');document.getElementById('contador').innerText=carrito.reduce((a,b)=>a+b.cant,0);}
+function filtrar(c){catActiva=c;mostrar()}
+function agregar(){let n=document.getElementById('nombre').value;let pr=document.getElementById('precio').value;if(!n||!pr)return alert('Completa nombre y precio');productos.push({nombre:n,precio:pr,stock:document.getElementById('stock').value,categoria:document.getElementById('categoria').value,foto:fotoBase64,promo:document.getElementById('promo').checked});localStorage.setItem('productos',JSON.stringify(productos));document.querySelectorAll('#nombre,#precio,#stock').forEach(i=>i.value='');document.getElementById('previewFoto').style.display='none';fotoBase64='';mostrar();}
+function borrarProducto(i){if(confirm('¿Borrar?')){productos.splice(i,1);localStorage.setItem('productos',JSON.stringify(productos));mostrar();}}
+function addCarrito(n,p){let item=carrito.find(x=>x.nombre==n);if(item)item.cant++;else carrito.push({nombre:n,precio:p,cant:1});localStorage.setItem('carrito',JSON.stringify(carrito));mostrar();}
+function borrarCarrito(n){carrito=carrito.filter(x=>x.nombre!=n);localStorage.setItem('carrito',JSON.stringify(carrito));abrirCarrito();mostrar();}
+function abrirCarrito(){document.getElementById('modalCarrito').style.display='block';document.getElementById('listaCarrito').innerHTML=carrito.length?carrito.map(i=>`<div class="item-carrito"><span>${i.nombre} x${i.cant} = $${i.precio*i.cant}</span><button class="btn-borrar" onclick="borrarCarrito('${i.nombre}')">Borrar</button></div>`).join('')+'<hr><b>Total: $'+carrito.reduce((a,b)=>a+b.precio*b.cant,0)+'</b>':'<p>Vacío</p>';}
+function cerrarCarrito(){document.getElementById('modalCarrito').style.display='none'}
+function enviarPedido(){let nom=document.getElementById('nombreCliente').value;let dir=document.getElementById('dirCliente').value;if(!nom||!dir)return alert('Completa datos');let texto=`*NUEVO PEDIDO SUPER PI*%0ACliente: ${nom}%0ADir: ${dir}%0A`;carrito.forEach(i=>texto+=`- ${i.nombre} x${i.cant} = $${i.precio*i.cant}%0A`);texto+=`%0ATOTAL: $${carrito.reduce((a,b)=>a+b.precio*b.cant,0)}`;window.open(`https://wa.me/${MI_NUMERO}?text=${texto}`);carrito=[];localStorage.setItem('carrito','[]');cerrarCarrito();mostrar();}
+mostrar();
+</script>
+</body>
+</html>
