@@ -5,118 +5,115 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fabrica de Apps por Voz</title>
 <style>
-body{background:#0f172a;color:#fff;font-family:sans-serif;padding:20px;text-align:center}
-h1{color:#38bdf8}
-.input-box{display:flex;gap:10px;justify-content:center;margin:20px 0}
-#texto{flex:1;max-width:300px;padding:12px;border-radius:8px;border:none;background:#1e293b;color:#fff}
-#mic{width:50px;height:50px;border-radius:50%;background:#22c55e;border:none;font-size:24px;cursor:pointer}
-#crear{background:#38bdf8;color:#000;padding:12px 20px;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
-.app-box{background:#1e293b;padding:15px;border-radius:10px;margin:15px auto;max-width:600px;text-align:left}
-.btn{padding:8px 12px;border:none;border-radius:6px;font-weight:bold;margin:5px;cursor:pointer}
-.btn-abrir{background:#22c55e;color:#000}
-.btn-borrar{background:#ef4444;color:#fff}
-.btn-publicar{background:#38bdf8;color:#000}
-.app-contenido{display:none;margin-top:15px;border-top:1px solid #444;padding-top:15px}
-.producto{background:#334155;padding:10px;border-radius:8px;margin:8px 0}
-.promo{border:2px solid #f59e0b;background:#422006}
-input,textarea{padding:8px;margin:5px;border-radius:5px;border:none;width:90%}
-.badge{background:#f59e0b;color:#000;padding:3px 8px;border-radius:5px;font-size:12px}
+body{background:#0f172a;color:white;font-family:Arial;padding:15px}
+.container{max-width:600px;margin:auto;background:#1e293b;padding:20px;border-radius:15px}
+input,textarea{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;background:#334155;color:white}
+button{padding:10px 15px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:3px}
+.btn-publicar{background:#38bdf8;color:black;width:100%}
+.btn-wsp{background:#25D366;color:white;width:100%;margin-top:5px}
+.btn-borrar{background:#ef4444;color:white;font-size:12px;padding:5px 10px}
+.producto{background:#334155;padding:12px;margin:8px 0;border-radius:10px;overflow:auto}
+.producto img{width:80px;height:80px;border-radius:10px;object-fit:cover;float:left;margin-right:10px}
+.promo{border:2px solid orange}
 </style>
 </head>
 <body>
-<h1>🏭 Fabrica de Apps por Voz</h1>
-<p>Di: calculadora, lista, tienda</p>
+<div class="container">
+<h2>🏭 Fabrica de Apps por Voz</h2>
 
-<div class="input-box">
-  <input id="texto" placeholder="Escribe o habla tu idea...">
-  <button id="mic">🎤</button>
-  <button id="crear" onclick="crearAppDesdeTexto()">Crear</button>
+<div class="container" style="background:#0f172a">
+<h3>🛒 Tienda Local</h3>
+
+<input id="buscar" placeholder="🔍 Buscar producto..." onkeyup="mostrar()">
+
+<input id="nombre" placeholder="Nombre del producto">
+<input id="precio" type="number" placeholder="Precio">
+<textarea id="desc" placeholder="Descripción y stock"></textarea>
+<input id="foto" type="file" accept="image/*">
+
+<label><input type="checkbox" id="promo"> 🔥 Promocion</label><br><br>
+
+<button class="btn-publicar" onclick="publicar()">Publicar</button>
+
+<h3>🔥 Promociones</h3>
+<div id="promos"></div>
+
+<h3>📦 Todos los Productos</h3>
+<div id="todos"></div>
 </div>
 
-<div id="lista-apps"><h2>Mis aplicaciones</h2></div>
+</div>
 
 <script>
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const recognition = new SpeechRecognition();
-recognition.lang = 'es-AR';
-mic.onclick = () => { recognition.start(); mic.style.background='#ef4444'; }
-recognition.onend = () => { mic.style.background='#22c55e'; }
-recognition.onresult = (e) => { texto.value = e.results[0][0].transcript; crearAppDesdeTexto(); }
+let productos = JSON.parse(localStorage.getItem('productos')) || [];
+const MI_NUMERO = "5493483497130";
 
-cargarApps();
-
-function crearAppDesdeTexto(){
-  const pedido = texto.value.toLowerCase();
-  if(!pedido) return;
-  texto.value = '';
-  let id = Date.now();
-  let codigo = '';
-  let nombre = 'App';
-
-  if(pedido.includes('tienda') || pedido.includes('mercado') || pedido.includes('venta')){
-    nombre = "🛒 Tienda Local";
-    codigo = `
-      <input id="busc${id}" placeholder="🔍 Buscar producto..." onkeyup="buscar${id}()"><br>
-      <h3>➕ Publicar Producto</h3>
-      <input id="nom${id}" placeholder="Nombre del producto"><br>
-      <input id="pre${id}" type="number" placeholder="Precio $"><br>
-      <textarea id="desc${id}" placeholder="Descripcion"></textarea><br>
-      <label><input type="checkbox" id="promo${id}"> 🔥 Marcar como Promocion</label><br>
-      <button class="btn btn-publicar" onclick="guardarProd${id}()">Publicar</button>
-      <h3>🔥 Promociones</h3><div id="promos${id}"></div>
-      <h3>📦 Todos los Productos</h3><div id="lista${id}"></div>
-      <script>
-      function guardarProd${id}(){
-        if(!nom${id}.value ||!pre${id}.value) return alert("Completa nombre y precio");
-        let prods = JSON.parse(localStorage.getItem("tienda${id}") || "[]");
-        prods.push({n:nom${id}.value, p:pre${id}.value, d:desc${id}.value, promo:promo${id}.checked});
-        localStorage.setItem("tienda${id}", JSON.stringify(prods));
-        mostrarProd${id}();
-        nom${id}.value=""; pre${id}.value=""; desc${id}.value=""; promo${id}.checked=false;
-        alert("Producto publicado!");
-      }
-      function mostrarProd${id}(){
-        let prods = JSON.parse(localStorage.getItem("tienda${id}") || "[]");
-        let promos = prods.filter(p=>p.promo);
-        let normales = prods.filter(p=>!p.promo);
-        promos${id}.innerHTML = promos.map(p=>"<div class=producto promo><span class=badge>OFERTA</span><br><b>"+p.n+"</b><br>$"+p.p+"<br><small>"+p.d+"</small></div>").join("") || "<p>No hay promos</p>";
-        lista${id}.innerHTML = normales.map(p=>"<div class=producto><b>"+p.n+"</b><br>$"+p.p+"<br><small>"+p.d+"</small></div>").join("") || "<p>No hay productos</p>";
-      }
-      function buscar${id}(){
-        let txt = busc${id}.value.toLowerCase();
-        let prods = JSON.parse(localStorage.getItem("tienda${id}") || "[]");
-        let filtrados = prods.filter(p=>p.n.toLowerCase().includes(txt));
-        lista${id}.innerHTML = filtrados.map(p=>"<div class=producto><b>"+p.n+"</b><br>$"+p.p+"<br><small>"+p.d+"</small></div>").join("");
-      }
-      mostrarProd${id}();
-      </` + `script>`;
-  }
-  else if(pedido.includes('calculadora')){
-    nombre = "🧮 Calculadora";
-    codigo = '<input id="a'+id+'" type="number"><input id="b'+id+'" type="number"><br><button onclick="alert(Number(a'+id+'.value)+Number(b'+id+'.value))">Sumar</button>';
-  }
-  else if(pedido.includes('lista')){
-    nombre = "📝 Lista";
-    codigo = '<input id="t'+id+'"><button onclick="l'+id+'.innerHTML+=\'<li>\'+t'+id+'.value+\'</li>\';t'+id+'.value=\'\'">Agregar</button><ul id="l'+id+'"></ul>';
-  }
-
-  let apps = JSON.parse(localStorage.getItem('misApps') || '[]');
-  apps.push({id, nombre, pedido, codigo});
-  localStorage.setItem('misApps', JSON.stringify(apps));
-  cargarApps();
+function guardar() {
+  localStorage.setItem('productos', JSON.stringify(productos));
 }
 
-function cargarApps(){
-  let apps = JSON.parse(localStorage.getItem('misApps') || '[]');
-  let html = '<h2>Mis aplicaciones</h2>';
-  if(apps.length === 0) html += '<p>Aun no creaste ninguna app</p>';
-  apps.forEach(app => {
-    html += '<div class="app-box"><b>'+app.nombre+'</b><br><small>Pedido: "'+app.pedido+'"</small><br><button class="btn btn-abrir" onclick="abrirApp('+app.id+')">Abrir</button><button class="btn btn-borrar" onclick="borrarApp('+app.id+')">Borrar</button><div class="app-contenido" id="app-'+app.id+'">'+app.codigo+'</div></div>';
-  });
-  document.getElementById('lista-apps').innerHTML = html;
+function publicar() {
+  let n = document.getElementById('nombre').value;
+  let p = document.getElementById('precio').value;
+  let d = document.getElementById('desc').value;
+  let pr = document.getElementById('promo').checked;
+  let file = document.getElementById('foto').files[0];
+  
+  if(n == '' || p == '') {alert('Falta nombre o precio'); return;}
+  
+  if(file) {
+    let reader = new FileReader();
+    reader.onload = function(e) {
+      productos.push({nombre:n, precio:p, desc:d, promo:pr, foto:e.target.result});
+      guardar(); mostrar(); limpiar();
+    }
+    reader.readAsDataURL(file);
+  } else {
+    productos.push({nombre:n, precio:p, desc:d, promo:pr, foto:''});
+    guardar(); mostrar(); limpiar();
+  }
 }
-function abrirApp(id){ let div = document.getElementById('app-'+id); div.style.display = div.style.display === 'block'? 'none' : 'block'; }
-function borrarApp(id){ if(confirm('¿Borrar?')){ let apps = JSON.parse(localStorage.getItem('misApps') || '[]'); apps = apps.filter(app => app.id!== id); localStorage.setItem('misApps', JSON.stringify(apps)); cargarApps(); }}
+
+function borrar(i) {
+  if(confirm('¿Borrar ' + productos[i].nombre + '?')) {
+    productos.splice(i,1);
+    guardar(); mostrar();
+  }
+}
+
+function pedirWsp(nom, pre) {
+  let msg = 'Hola! Quiero ' + nom + ' $' + pre;
+  window.open('https://wa.me/' + MI_NUMERO + '?text=' + encodeURIComponent(msg));
+}
+
+function limpiar() {
+  document.getElementById('nombre').value = '';
+  document.getElementById('precio').value = '';
+  document.getElementById('desc').value = '';
+  document.getElementById('foto').value = '';
+  document.getElementById('promo').checked = false;
+  alert('Producto publicado!');
+}
+
+function mostrar() {
+  let busq = document.getElementById('buscar').value.toLowerCase();
+  let promos = ''; let todos = '';
+  for(let i=0; i<productos.length; i++) {
+    if(productos[i].nombre.toLowerCase().includes(busq)) {
+      let img = productos[i].foto? '<img src="' + productos[i].foto + '">' : '';
+      let item = '<div class="producto ' + (productos[i].promo? 'promo' : '') + '">' + img + 
+      '<b>' + productos[i].nombre + '</b> - $' + productos[i].precio + 
+      '<br>' + productos[i].desc +
+      '<button class="btn-wsp" onclick="pedirWsp(\''+productos[i].nombre+'\','+productos[i].precio+')">Pedir por WhatsApp</button>' +
+      '<button class="btn-borrar" onclick="borrar('+i+')">🗑️ Borrar</button></div>';
+      todos += item;
+      if(productos[i].promo) promos += item;
+    }
+  }
+  document.getElementById('promos').innerHTML = promos;
+  document.getElementById('todos').innerHTML = todos;
+}
+mostrar();
 </script>
 </body>
 </html>
