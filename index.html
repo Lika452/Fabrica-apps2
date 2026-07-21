@@ -1,15 +1,50 @@
 <!DOCTYPE html>
 <html lang="es">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Super Pi</title>
-<style>body{background:#000;color:#fff;font-family:Arial;text-align:center;padding:20px}
-.btn{background:#25D366;color:#fff;border:none;padding:15px 30px;border-radius:50px;font-size:18px;font-weight:bold;margin:20px}</style>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SUPER PI</title>
+<style>
+body{margin:0;background:#000;color:#fff;font-family:Arial}
+.header{background:linear-gradient(135deg,#ff416c,#ff4b2b);text-align:center;padding:15px}
+.header img{width:120px;border-radius:50%;border:4px solid #fff}
+.header h1{margin:10px 0;font-size:32px}
+.info{background:#111;padding:10px;text-align:center;color:#00ff88;font-weight:bold}
+.cats{display:flex;gap:10px;padding:15px;overflow-x:auto}
+.cat{padding:10px 20px;border:2px solid #ff416c;border-radius:25px;background:transparent;color:#ff416c;font-weight:bold}
+.cat.active{background:linear-gradient(135deg,#ff416c,#ff4b2b);color:#fff;border:none}
+.btn-voz{background:#25D366;color:#fff;border:none;padding:18px;border-radius:50px;font-size:18px;font-weight:bold;width:90%;margin:15px auto;display:block}
+.prod{background:#1a1a1a;margin:15px;border-radius:15px;overflow:hidden;border:2px solid #ffd700}
+.prod img{width:100%}
+.admin{position:fixed;top:10px;right:10px;background:#333;color:#fff;border:none;padding:8px 12px;border-radius:8px}
+.carrito{position:fixed;bottom:20px;right:20px;background:#25D366;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+</style>
 </head>
 <body>
-<h1 style="color:#ff416c">SUPER PI 🐔</h1>
-<p>🕒 9:00 a 22:00hs | 🚚 Envío Gratis +$10000 | 📍 Calchaquí</p>
-<button class="btn" onclick="alert('Toca y habla')">🎤 HACE TU PEDIDO HABLANDO</button>
-<p>Productos: Cargar desde Admin</p>
-<button onclick="alert('Clave: Admin')" style="position:fixed;top:10px;right:10px">⚙️ Admin</button>
+<button class="admin" onclick="alert('Clave: Admin')">⚙️ Admin</button>
+
+<div class="header">
+<img src="https://i.imgur.com/8Km9tLL.png" alt="Logo">
+<h1>SUPER PI</h1>
+</div>
+
+<div class="info">
+⏰ Horario: 9:00 a 22:00hs | 🚚 Envío Gratis desde $10000 | 📍 Calchaquí
+</div>
+
+<button class="btn-voz" onclick="alert('Toca y habla: quiero un pollo entero')">🎤 HACE TU PEDIDO HABLANDO</button>
+
+<div class="cats">
+<button class="cat active">Todas</button>
+<button class="cat">Polleria</button>
+<button class="cat">Bebidas</button>
+<button class="cat">Kiosco</button>
+</div>
+
+<div class="prod">
+<img src="https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=500" alt="Pollo">
+</div>
+
+<div class="carrito">🛒<span style="background:red;border-radius:50%;padding:2px 6px;font-size:12px;position:absolute;margin:-20px 0 0 20px">0</span></div>
 </body>
 </html>
