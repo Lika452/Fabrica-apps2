@@ -15,27 +15,28 @@ button{padding:10px 15px;border:none;border-radius:8px;font-weight:bold;cursor:p
 .btn-carrito{background:#f59e0b;color:black}
 .producto{background:#334155;padding:12px;margin:8px 0;border-radius:10px;overflow:auto}
 .producto img{width:80px;height:80px;border-radius:10px;object-fit:cover;float:left;margin-right:10px}
-.promo{border:2px solid orange}
+.promo{border:2px solid orange;animation:brillar 2s infinite}
+@keyframes brillar{0%{box-shadow:0 0 5px orange}50%{box-shadow:0 0 20px orange}100%{box-shadow:0 0 5px orange}}
 .categoria{background:#475569;padding:3px 8px;border-radius:5px;font-size:12px}
 .stock{color:#4ade80;font-weight:bold}
-.carrito{position:fixed;bottom:20px;right:20px;background:#25D366;padding:15px;border-radius:50%;font-size:24px}
+.carrito{position:fixed;bottom:20px;right:20px;background:#25D366;padding:15px;border-radius:50%;font-size:24px;cursor:pointer;z-index:999}
+.contador{background:red;color:white;border-radius:50%;padding:2px 8px;position:absolute;top:-5px;right:-5px;font-size:14px}
+.notif{position:fixed;top:20px;right:20px;background:orange;padding:15px;border-radius:10px;display:none;z-index:999}
 </style>
 </head>
 <body>
 <div class="container">
 <h2>🏭 Fabrica de Apps por Voz</h2>
-
 <div class="container" style="background:#0f172a">
 <h3>🛒 Tienda Local</h3>
-
 <input id="buscar" placeholder="🔍 Buscar producto..." onkeyup="mostrar()">
 <select id="filtroCat" onchange="mostrar()">
 <option value="">Todas las Categorias</option>
 <option>Verduleria</option>
 <option>Almacen</option>
 <option>Bebidas</option>
+<option>Carniceria</option>
 </select>
-
 <input id="nombre" placeholder="Nombre del producto">
 <input id="precio" type="number" placeholder="Precio">
 <input id="stock" type="number" placeholder="Stock disponible">
@@ -43,34 +44,35 @@ button{padding:10px 15px;border:none;border-radius:8px;font-weight:bold;cursor:p
 <option>Verduleria</option>
 <option>Almacen</option>
 <option>Bebidas</option>
+<option>Carniceria</option>
 </select>
 <textarea id="desc" placeholder="Descripción"></textarea>
 <input id="foto" type="file" accept="image/*">
-
 <label><input type="checkbox" id="promo"> 🔥 Promocion</label><br><br>
-
 <button class="btn-publicar" onclick="publicar()">Publicar</button>
-
 <h3>🔥 Promociones</h3>
 <div id="promos"></div>
-
 <h3>📦 Todos los Productos</h3>
 <div id="todos"></div>
 </div>
-
 </div>
-
-<div class="carrito" onclick="enviarPedido()">🛒<span id="contador">0</span></div>
-
+<div class="carrito" onclick="enviarPedido()">🛒<span class="contador" id="contador">0</span></div>
+<div class="notif" id="notif">🔥 ¡Nueva Promocion Disponible!</div>
 <script>
 let productos = JSON.parse(localStorage.getItem('productos')) || [];
 let carrito = [];
 const MI_NUMERO = "5493483497130";
-
+window.onload = function() {
+  mostrar();
+  let promos = productos.filter(p => p.promo);
+  if(promos.length > 0) {
+    document.getElementById('notif').style.display = 'block';
+    setTimeout(() => {document.getElementById('notif').style.display = 'none'}, 4000);
+  }
+}
 function guardar() {
   localStorage.setItem('productos', JSON.stringify(productos));
 }
-
 function publicar() {
   let n = document.getElementById('nombre').value;
   let p = document.getElementById('precio').value;
@@ -79,9 +81,7 @@ function publicar() {
   let d = document.getElementById('desc').value;
   let pr = document.getElementById('promo').checked;
   let file = document.getElementById('foto').files[0];
-  
   if(n == '' || p == '' || s == '') {alert('Falta nombre, precio o stock'); return;}
-  
   if(file) {
     let reader = new FileReader();
     reader.onload = function(e) {
@@ -94,13 +94,11 @@ function publicar() {
     guardar(); mostrar(); limpiar();
   }
 }
-
 function agregarCarrito(i) {
   carrito.push(productos[i]);
   document.getElementById('contador').innerText = carrito.length;
   alert(productos[i].nombre + ' agregado al carrito');
 }
-
 function enviarPedido() {
   if(carrito.length == 0) {alert('Carrito vacio'); return;}
   let msg = 'Hola! Quiero pedir:\n';
@@ -114,14 +112,12 @@ function enviarPedido() {
   carrito = [];
   document.getElementById('contador').innerText = 0;
 }
-
 function borrar(i) {
   if(confirm('¿Borrar ' + productos[i].nombre + '?')) {
     productos.splice(i,1);
     guardar(); mostrar();
   }
 }
-
 function limpiar() {
   document.getElementById('nombre').value = '';
   document.getElementById('precio').value = '';
@@ -131,7 +127,6 @@ function limpiar() {
   document.getElementById('promo').checked = false;
   alert('Producto publicado!');
 }
-
 function mostrar() {
   let busq = document.getElementById('buscar').value.toLowerCase();
   let cat = document.getElementById('filtroCat').value;
@@ -154,7 +149,6 @@ function mostrar() {
   document.getElementById('promos').innerHTML = promos;
   document.getElementById('todos').innerHTML = todos;
 }
-mostrar();
 </script>
 </body>
 </html>
