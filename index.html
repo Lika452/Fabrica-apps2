@@ -5,100 +5,93 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kiosco Polleria Lika</title>
 <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: Arial, sans-serif; background:#f5f5f5; padding: 10px; }
-.header { background: linear-gradient(90deg, #ff6b00, #ff3c00); color:white; padding:20px; text-align:center; border-radius:12px; margin-bottom:15px; }
-.header h2 { margin:5px 0; font-size:24px; }
-.header h3 { margin:5px 0; font-weight:normal; font-size:14px; }
-  #bannerPromo { display:none; background: linear-gradient(90deg, #ff6b00, #ff3c00); color:white; padding:15px; border-radius:12px; margin:15px 0; text-align:center; font-weight:bold; animation: parpadeo 1.2s infinite; }
-  @keyframes parpadeo { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); }
-.filtros { display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap; justify-content:center; }
-.filtros button { padding:10px 18px; border:none; border-radius:20px; background:white; cursor:pointer; font-weight:bold; }
-.filtros button.active { background:#ff6b00; color:white; }
-.productos { display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:15px; }
-.producto { background:white; border-radius:12px; padding:10px; text-align:center; position:relative; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
-.producto img { width:100%; height:120px; object-fit:cover; border-radius:8px; }
-.promo { position:absolute; top:5px; right:5px; background:orange; color:white; padding:4px 8px; border-radius:10px; font-size:12px; font-weight:bold; }
-.btn-add { background:#25D366; color:white; border:none; padding:10px; width:100%; border-radius:8px; margin-top:8px; cursor:pointer; font-weight:bold; }
-.carrito-btn { position:fixed; bottom:20px; right:20px; background:#25D366; color:white; border:none; border-radius:50%; width:60px; height:60px; font-size:28px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.3); }
-.form-add { background:white; padding:15px; border-radius:12px; margin-top:20px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
-.form-add input,.form-add select { width:100%; padding:10px; margin:8px 0; border:1px solid #ddd; border-radius:8px; }
-.form-add button { width:100%; padding:12px; background:#ff6b00; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
+*{box-sizing:border-box}
+body{background:#0f0f0f;color:#fff;font-family:'Arial';margin:0;padding:0}
+.header{background:linear-gradient(90deg,#ff4b2b,#ff416c);padding:25px 15px;text-align:center;position:sticky;top:0;z-index:10}
+.header h1{margin:0;font-size:26px}
+.header p{margin:5px 0 0 0;opacity:0.9;font-size:14px}
+.container{padding:15px;max-width:700px;margin:auto}
+.cats{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:15px}
+.btn-cat{background:#1f1f1f;color:#ff416c;border:2px solid #ff416c;padding:10px 18px;border-radius:25px;cursor:pointer;font-weight:bold;white-space:nowrap}
+.btn-cat.active{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none}
+.producto{background:#1a1a1a;border:1px solid #333;border-radius:15px;padding:15px;margin:12px 0;box-shadow:0 4px 10px rgba(0,0,0,0.5)}
+.producto.promo{border:2px solid #ffd700;box-shadow:0 0 20px rgba(255,215,0,0.4);animation:brillo 2s infinite}
+@keyframes brillo{0%,100%{box-shadow:0 0 20px rgba(255,215,0,0.4)}50%{box-shadow:0 0 30px rgba(255,215,0,0.8)}}
+.producto h3{margin:0 0 8px 0;color:#ff416c}
+.precio{color:#00ff88;font-size:22px;font-weight:bold}
+.stock{color:#aaa;font-size:12px}
+.btn-wsp{background:#25D366;color:#fff;border:none;padding:14px;border-radius:12px;width:100%;font-size:16px;cursor:pointer;font-weight:bold;margin-top:20px}
+.form{background:#1a1a1a;padding:20px;border-radius:15px;margin-top:20px;border:1px solid #333}
+input,select{background:#2a2a2a;color:#fff;border:1px solid #444;padding:12px;border-radius:10px;width:100%;margin:8px 0;font-size:15px}
+.btn-pub{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none;padding:14px;border-radius:12px;width:100%;font-size:16px;cursor:pointer;font-weight:bold;margin-top:10px}
+.btn-pub:hover{opacity:0.9}
 </style>
 </head>
 <body>
 <div class="header">
-  <h2>🏬 Kiosco Polleria Lika</h2>
-  <h3>🛒 Kiosco, Bebidas y Pollos</h3>
+<h1>🏬 Kiosco Polleria Lika</h1>
+<p>Kiosco • Bebidas • Pollos</p>
 </div>
-<div id="bannerPromo">
-  🔥 ¡OFERTAS DE LA SEMANA! 🔥
-  <div id="listaPromos" style="font-size:14px; margin-top:8px;"></div>
+<div class="container">
+<div class="cats" id="categorias"></div>
+<div id="productos"></div>
+
+<div class="form">
+<h2>➕ Agregar Producto</h2>
+<input id="nombre" placeholder="Nombre del producto">
+<input id="precio" type="number" placeholder="Precio $">
+<input id="stock" type="number" placeholder="Stock">
+<select id="categoria">
+<option value="Polleria">🍗 Polleria</option>
+<option value="Bebidas">🥤 Bebidas</option>
+<option value="Kiosco">🍫 Kiosco</option>
+</select>
+<label style="display:flex;align-items:center;gap:8px;margin:10px 0">
+<input type="checkbox" id="promo"> <span>🔥 En promoción</span>
+</label>
+<button class="btn-pub" onclick="agregar()">Publicar producto</button>
 </div>
-<div class="filtros">
-  <button onclick="filtrar('todos')" class="active">Todos</button>
-  <button onclick="filtrar('Polleria')">Polleria</button>
-  <button onclick="filtrar('Bebidas')">Bebidas</button>
-  <button onclick="filtrar('Kiosco')">Kiosco</button>
+
+<button class="btn-wsp" onclick="window.open('https://wa.me/549')">📱 Consultar por WhatsApp</button>
 </div>
-<div class="productos" id="listaProductos"></div>
-<button class="carrito-btn" onclick="enviarWhatsApp()">🛒</button>
-<div class="form-add">
-  <h3>Agregar Producto</h3>
-  <input type="text" id="nombre" placeholder="Nombre del producto">
-  <input type="number" id="precio" placeholder="Precio $">
-  <input type="number" id="stock" placeholder="Stock">
-  <select id="categoria">
-    <option>Polleria</option>
-    <option>Bebidas</option>
-    <option>Kiosco</option>
-  </select>
-  <input type="file" id="foto" accept="image/*">
-  <label><input type="checkbox" id="promo"> En promoción</label>
-  <button onclick="agregarProducto()">Publicar producto</button>
-</div>
+
 <script>
-let productos = JSON.parse(localStorage.getItem('productos')) || [];
-let carrito = [];
-let categoriaActiva = 'todos';
-function mostrarProductos() {
-  const cont = document.getElementById('listaProductos');
-  const filtrados = categoriaActiva === 'todos'? productos : productos.filter(p => p.categoria === categoriaActiva);
-  if(filtrados.length === 0){ cont.innerHTML = '<p style="text-align:center; grid-column:1/-1;">No hay productos. Agrega uno abajo 👇</p>'; } 
-  else { cont.innerHTML = filtrados.map((p, i) => `<div class="producto">${p.promocion? '<span class="promo">PROMO</span>' : ''}<img src="${p.foto || 'https://via.placeholder.com/150/ff6b00/ffffff?text=Producto'}"><h4>${p.nombre}</h4><p style="font-weight:bold; color:#ff6b00;">$${p.precio}</p><p style="font-size:12px;">Stock: ${p.stock}</p><button class="btn-add" onclick="agregarCarrito(${i})">Agregar al carrito</button></div>`).join(''); }
-  mostrarBannerPromos();
+let productos=JSON.parse(localStorage.getItem('productos'))||[];
+let catActiva='Todas';
+const categorias=['Todas','Polleria','Bebidas','Kiosco'];
+
+function mostrar(){
+document.getElementById('categorias').innerHTML=categorias.map(c=>
+`<button class="btn-cat ${catActiva==c?'active':''}" onclick="filtrar('${c}')">${c}</button>`
+).join('');
+let lista=catActiva=='Todas'?productos:productos.filter(p=>p.categoria==catActiva);
+document.getElementById('productos').innerHTML=lista.length?lista.map((p,i)=>`
+<div class="producto ${p.promo?'promo':''}">
+<h3>${p.nombre}</h3>
+<div class="precio">$${p.precio}</div>
+<div class="stock">Stock: ${p.stock}</div>
+${p.promo?'<div style="color:#ffd700;margin-top:5px">🔥 EN PROMO</div>':''}
+</div>
+`).join(''):'<p style="text-align:center;opacity:0.6">No hay productos. Agrega uno abajo</p>';
 }
-function mostrarBannerPromos() {
-  const promos = productos.filter(p => p.promocion);
-  const banner = document.getElementById('bannerPromo');
-  const lista = document.getElementById('listaPromos');
-  if(promos.length > 0){ banner.style.display = 'block'; lista.innerHTML = promos.map(p => `• ${p.nombre}: $${p.precio}`).join('<br>'); } 
-  else { banner.style.display = 'none'; }
+
+function filtrar(c){catActiva=c;mostrar()}
+
+function agregar(){
+let n=document.getElementById('nombre').value;
+let pr=document.getElementById('precio').value;
+let st=document.getElementById('stock').value;
+let ca=document.getElementById('categoria').value;
+let pm=document.getElementById('promo').checked;
+if(!n||!pr)return alert('Completa nombre y precio');
+productos.push({nombre:n,precio:pr,stock:st,categoria:ca,promo:pm});
+localStorage.setItem('productos',JSON.stringify(productos));
+document.getElementById('nombre').value='';
+document.getElementById('precio').value='';
+document.getElementById('stock').value='';
+mostrar();
 }
-function filtrar(cat) { categoriaActiva = cat; document.querySelectorAll('.filtros button').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); mostrarProductos(); }
-function agregarCarrito(i) { carrito.push(productos[i]); alert(productos[i].nombre + ' agregado al carrito ✅'); }
-function enviarWhatsApp() {
-  if(carrito.length === 0) return alert('Carrito vacío');
-  let msg = 'Hola Kiosco Polleria Lika! Quiero pedir:%0A%0A';
-  carrito.forEach(p => msg += `- ${p.nombre} $${p.precio}%0A`);
-  msg += '%0ATotal: $' + carrito.reduce((t,p)=>t+Number(p.precio),0);
-  window.open(`https://wa.me/5493483497130?text=${msg}`);
-  carrito = [];
-}
-function agregarProducto() {
-  const nombre = document.getElementById('nombre').value;
-  const precio = document.getElementById('precio').value;
-  const stock = document.getElementById('stock').value;
-  const categoria = document.getElementById('categoria').value;
-  const promocion = document.getElementById('promo').checked;
-  const foto = document.getElementById('foto').files[0];
-  if(!nombre ||!precio) return alert('Completa nombre y precio');
-  const reader = new FileReader();
-  reader.onload = function(e) { productos.push({nombre, precio, stock, categoria, promocion, foto: e.target.result}); localStorage.setItem('productos', JSON.stringify(productos)); mostrarProductos(); document.getElementById('nombre').value = ''; document.getElementById('precio').value = ''; document.getElementById('stock').value = ''; }
-  if(foto) reader.readAsDataURL(foto);
-  else { productos.push({nombre, precio, stock, categoria, promocion, foto: ''}); localStorage.setItem('productos', JSON.stringify(productos)); mostrarProductos(); }
-}
-mostrarProductos();
+mostrar();
 </script>
 </body>
 </html>
