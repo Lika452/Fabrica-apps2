@@ -1,32 +1,27 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Super Pi</title>
 <style>
-*{box-sizing:border-box}body{background:#0f0f0f;color:#fff;font-family:Arial;margin:0;padding:0 0 80px 0}
-.header{background:linear-gradient(90deg,#ff4b2b,#ff416c);padding:15px;text-align:center;position:sticky;top:0}
-.logo{width:90px;height:90px;border-radius:50%;border:3px solid #fff;margin-bottom:8px;object-fit:cover}
-.btn-voz{background:linear-gradient(90deg,#25D366,#128C7E);color:#fff;border:none;padding:14px;border-radius:50px;width:90%;margin:15px auto;font-weight:bold;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px}
-.btn-voz.grabando{background:#ff416c;animation:parpadeo 0.8s infinite}
-@keyframes parpadeo{0%,100%{opacity:1}50%{opacity:0.5}}
-.info-bar{background:#1a1a1a;padding:10px;text-align:center;font-size:13px;border-bottom:2px solid #ff416c;color:#00ff88;font-weight:bold}
-.btn-cat{background:#1f1f1f;color:#ff416c;border:2px solid #ff416c;padding:10px 18px;border-radius:25px;cursor:pointer;font-weight:bold;margin:5px}
-.btn-cat.active{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none}
-.producto{background:#1a1a1a;border:1px solid #333;border-radius:15px;padding:12px;margin:12px 0}
-.img-prod{width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:10px}
-.precio{color:#00ff88;font-size:22px;font-weight:bold}
-.btn-add{background:#ff416c;color:#fff;border:none;padding:10px;border-radius:10px;width:100%;margin-top:8px;cursor:pointer;font-weight:bold}
-.carrito-btn{position:fixed;bottom:20px;right:20px;background:#25D366;width:65px;height:65px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;z-index:20}
-.carrito-contador{position:absolute;top:-5px;right:-5px;background:#ff416c;color:#fff;border-radius:50%;width:26px;height:26px;font-size:13px;display:flex;align-items:center;justify-content:center;font-weight:bold}
-.container{padding:15px;max-width:700px;margin:auto}.form{background:#1a1a1a;padding:20px;border-radius:15px;margin-top:20px;border:1px solid #333;display:none}
-input{background:#2a2a2a;color:#fff;border:1px solid #444;padding:12px;border-radius:10px;width:100%;margin:8px 0}
-.btn-pub{background:linear-gradient(90deg,#ff4b2b,#ff416c);color:#fff;border:none;padding:14px;border-radius:12px;width:100%;font-weight:bold;cursor:pointer;margin-top:8px}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:30;overflow-y:auto}
-.modal-content{background:#1a1a1a;margin:50px auto;padding:20px;border-radius:15px;max-width:500px}
-.btn-cerrar{float:right;background:none;border:none;color:#fff;font-size:24px;cursor:pointer}
-.btn-enviar{background:#25D366;color:#fff;border:none;padding:14px;border-radius:12px;width:100%;font-weight:bold;margin-top:10px;cursor:pointer}
-.item-carrito{display:flex;justify-content:space-between;align-items:center;margin:12px 0;padding:10px;background:#222;border-radius:10px}
-.btn-borrar{background:#ff416c;color:#fff;border:none;padding:5px 10px;border-radius:8px;cursor:pointer;font-size:12px}
-.btn-admin{position:fixed;top:10px;right:10px;background:#333;color:#fff;border:none;padding:8px 12px;border-radius:8px;font-size:12px;cursor:pointer;z-index:25}
-</style></head><body>
+body{background:#0f0f0f;color:#fff;font-family:Arial;margin:0;padding:20px}
+.header{text-align:center;background:linear-gradient(90deg,#ff4b2b,#ff416c);padding:15px;border-radius:15px}
+.logo{width:90px;height:90px;border-radius:50%;border:3px solid #fff}
+.btn-voz{background:#25D366;color:#fff;border:none;padding:15px;border-radius:50px;width:100%;font-size:16px;font-weight:bold;margin:20px 0}
+.info{padding:10px;text-align:center;background:#1a1a1a;border-radius:10px;margin:10px 0}
+.btn-admin{position:fixed;top:10px;right:10px;background:#333;color:#fff;border:none;padding:8px;border-radius:8px}
+</style>
+</head>
+<body>
+<button class="btn-admin" onclick="alert('Clave: Admin')">⚙️ Admin</button>
+<div class="header">
+<img src="https://i.imgur.com/8K3mZQp.png" class="logo">
+<h1>SUPER PI</h1>
+</div>
+<div class="info">🕒 9:00 a 22:00hs | 🚚 Envío Gratis +$10000 | 📍 Calchaquí</div>
+<button class="btn-voz" onclick="alert('Toca y habla')">🎤 HACE TU PEDIDO HABLANDO</button>
+<h3>Productos</h3>
+<div id="productos">Carga productos desde Admin</div>
+</body>
+</html>
